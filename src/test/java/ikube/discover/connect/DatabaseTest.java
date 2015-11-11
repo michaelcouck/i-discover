@@ -2,6 +2,7 @@ package ikube.discover.connect;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import ikube.discover.AbstractTest;
 import ikube.discover.Context;
 import ikube.discover.listener.IEvent;
 import ikube.discover.listener.IndexWriterEvent;
@@ -28,7 +29,7 @@ import static org.mockito.Matchers.any;
  * @version 01.00
  * @since 09-07-2015
  */
-public class DatabaseTest {
+public class DatabaseTest extends AbstractTest {
 
     @Spy
     @InjectMocks

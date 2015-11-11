@@ -1,5 +1,6 @@
 package ikube.discover.listener;
 
+import ikube.discover.AbstractTest;
 import ikube.discover.Context;
 import ikube.discover.cluster.ClusterManagerGridGain;
 import ikube.discover.tool.THREAD;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.*;
  * @version 01.00
  * @since 10-07-2015
  */
-public class ListenerManagerTest {
+public class ListenerManagerTest extends AbstractTest {
 
     @Mock
     private Context context;
@@ -35,7 +36,9 @@ public class ListenerManagerTest {
     @Mock
     private IConsumer<IEvent<?, ?>> listener;
     @Mock
-    private Map<String, List<IConsumer<IEvent<?, ?>>>> listeners;
+    private Map<String, Map<String, List<IConsumer<IEvent<?, ?>>>>> listeners;
+    @Mock
+    private Map<String, List<IConsumer<IEvent<?, ?>>>> listenersForType;
     @Mock
     private ClusterManagerGridGain clusterManager;
 
@@ -54,7 +57,7 @@ public class ListenerManagerTest {
     public void add() {
         // IListener<IEvent<?, ?>>, String, String
         listenerManager.add(listener, IEvent.class.getSimpleName(), "real-time-search");
-        verify(listeners, times(1)).put(any(String.class), any(List.class));
+        verify(listeners, times(1)).put(any(String.class), any(Map.class));
     }
 
     @Test
@@ -75,7 +78,8 @@ public class ListenerManagerTest {
     public void fire() {
         when(event.getContext()).thenReturn(context);
         when(event.getContext().getName()).thenReturn("context-name");
-        when(listeners.get(any(String.class))).thenReturn(Arrays.asList(listener));
+        when(listenersForType.get(any(String.class))).thenReturn(Arrays.asList(listener));
+        when(listeners.get(any(String.class))).thenReturn(listenersForType);
 
         listenerManager.fire(event, true);
         THREAD.sleep(100);
@@ -98,7 +102,8 @@ public class ListenerManagerTest {
     public void notifyListeners() {
         when(event.getContext()).thenReturn(context);
         when(event.getContext().getName()).thenReturn("context-name");
-        when(listeners.get(any(String.class))).thenReturn(Arrays.asList(listener));
+        when(listenersForType.get(any(String.class))).thenReturn(Arrays.asList(listener));
+        when(listeners.get(any(String.class))).thenReturn(listenersForType);
 
         listenerManager.notify(event);
         THREAD.sleep(100);

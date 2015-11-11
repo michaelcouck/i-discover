@@ -1,6 +1,7 @@
 package ikube.discover.schedule;
 
 import com.jcraft.jsch.JSchException;
+import ikube.discover.AbstractTest;
 import ikube.discover.Context;
 import ikube.discover.cluster.ClusterManagerGridGain;
 import ikube.discover.connect.DatabaseConnector;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.verify;
  * @version 01.00
  * @since 10-07-2015
  */
-public class SchedulerTest {
+public class SchedulerTest extends AbstractTest {
 
     @Spy
     @InjectMocks

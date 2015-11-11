@@ -30,7 +30,7 @@ import java.util.Random;
  */
 @Configurable
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"file:experimental/spring.xml"})
+@ContextConfiguration(locations = {"file:src/main/resources/experimental/spring.xml"})
 @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringContextConfigurationInspection"})
 public class Integration {
 

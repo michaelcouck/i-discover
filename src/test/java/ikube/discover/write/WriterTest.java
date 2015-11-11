@@ -1,6 +1,7 @@
 package ikube.discover.write;
 
 import com.jcraft.jsch.JSchException;
+import ikube.discover.AbstractTest;
 import ikube.discover.tool.THREAD;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertEquals;
  * @version 01.00
  * @since 10-07-2015
  */
-public class WriterTest {
+public class WriterTest extends AbstractTest {
 
     @Spy
     private Writer writer;

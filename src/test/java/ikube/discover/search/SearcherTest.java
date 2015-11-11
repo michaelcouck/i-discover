@@ -1,5 +1,6 @@
 package ikube.discover.search;
 
+import ikube.discover.AbstractTest;
 import ikube.discover.tool.THREAD;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
@@ -25,7 +26,7 @@ import static org.junit.Assert.*;
  * @version 01.00
  * @since 10-07-2015
  */
-public class SearcherTest {
+public class SearcherTest extends AbstractTest {
 
     @Spy
     private Searcher searcher;
@@ -45,7 +46,7 @@ public class SearcherTest {
     @Test
     public void openSearcher() throws IOException {
         int numberOfDirectories = 3;
-        Directory[] directories = null; // getDirectories(numberOfDirectories);
+        Directory[] directories = getDirectories(numberOfDirectories);
         searcher.openSearcher(directories);
 
         IndexSearcher indexSearcher = (IndexSearcher) Whitebox.getInternalState(searcher, "indexSearcher");
@@ -67,7 +68,7 @@ public class SearcherTest {
     @Test
     public void closeSearcher() throws IOException {
         final AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-        Directory[] directories = null; //getDirectories(3);
+        Directory[] directories = getDirectories(3);
         IndexReader indexReader = new MultiReader(open(directories[0]), open(directories[1]), open(directories[2]));
 
         indexReader.addReaderClosedListener(new IndexReader.ReaderClosedListener() {

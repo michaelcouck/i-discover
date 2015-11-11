@@ -28,9 +28,7 @@
         starting/user directory for spring-*.xml files.
     </description>
 
-    <context:property-placeholder
-        location="classpath*:**/experimental/spring.properties"
-        properties-ref="ikube.toolkit.PropertyConfigurer"/>
+    <context:property-placeholder location="classpath*:**/experimental/spring.properties" />
 
     <bean
         id="ikube.toolkit.Logging"
@@ -38,12 +36,13 @@
         property:staticMethod="ikube.toolkit.LOGGING.configure"/>
 
     <!-- This bean will look through the classpath and load every Spring properties file it finds. -->
-    <bean
-        id="ikube.toolkit.PropertyConfigurer"
-        class="ikube.toolkit.PropertyConfigurer"
-        lazy-init="false"
-        init-method="initialize"
-        property:fileNamePattern="spring.properties"/>
+    <!--<bean-->
+        <!--id="ikube.toolkit.PropertyConfigurer"-->
+        <!--class="ikube.toolkit.PropertyConfigurer"-->
+        <!--lazy-init="false"-->
+        <!--init-method="initialize"-->
+        <!--property:fileNamePattern="spring.properties"/>-->
+    <!--properties-ref="ikube.toolkit.PropertyConfigurer"-->
 
     <!-- Turn on AspectJ @Configurable support -->
     <!--<context:spring-configured />-->
