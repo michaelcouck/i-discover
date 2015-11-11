@@ -23,11 +23,11 @@ import java.util.Map;
  * @since 21-01-2012
  */
 @Component
-@Scope(Resource.REQUEST)
+@Scope(ResourceApi.REQUEST)
 @Consumes(MediaType.TEXT_PLAIN)
 @Produces(MediaType.APPLICATION_JSON)
-@Path(Discover.EXPERIMENTAL)
-public class Discover extends Resource {
+@Path(DiscoverApi.EXPERIMENTAL)
+public class DiscoverApi extends ResourceApi {
 
     static final String EXPERIMENTAL = "/experimental";
 

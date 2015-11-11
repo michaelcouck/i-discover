@@ -25,16 +25,34 @@
         <main.basedir>${basedir}/../..</main.basedir>
         <lucene-version>4.8.0</lucene-version>
         <jersey-version>1.18.1</jersey-version>
-        <junit-version>4.8.2</junit-version>
-        <spring-version>3.2.4.RELEASE</spring-version>
+        <spring-version>4.1.2.RELEASE</spring-version>
+        <spring-security-version>3.2.5.RELEASE</spring-security-version>
         <spring-security-oauth-version>3.19</spring-security-oauth-version>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>ikube</groupId>
+            <artifactId>ikube-com</artifactId>
+            <version>5.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jersey</artifactId>
             <version>1.2.0.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.jcraft</groupId>
@@ -92,14 +110,14 @@
             <version>6.1.6</version>
             <scope>compile</scope>
             <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tika</groupId>
-                    <artifactId>tika-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tika</groupId>
-                    <artifactId>tika-parsers</artifactId>
-                </exclusion>
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.tika</groupId>-->
+                    <!--<artifactId>tika-core</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.tika</groupId>-->
+                    <!--<artifactId>tika-parsers</artifactId>-->
+                <!--</exclusion>-->
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
@@ -120,14 +138,14 @@
             <version>6.1.8</version>
             <scope>compile</scope>
             <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tika</groupId>
-                    <artifactId>tika-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tika</groupId>
-                    <artifactId>tika-parsers</artifactId>
-                </exclusion>
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.tika</groupId>-->
+                    <!--<artifactId>tika-core</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.tika</groupId>-->
+                    <!--<artifactId>tika-parsers</artifactId>-->
+                <!--</exclusion>-->
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
@@ -148,14 +166,14 @@
             <version>6.1.6</version>
             <scope>compile</scope>
             <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tika</groupId>
-                    <artifactId>tika-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tika</groupId>
-                    <artifactId>tika-parsers</artifactId>
-                </exclusion>
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.tika</groupId>-->
+                    <!--<artifactId>tika-core</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.tika</groupId>-->
+                    <!--<artifactId>tika-parsers</artifactId>-->
+                <!--</exclusion>-->
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
@@ -192,11 +210,18 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.1.0.Final</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>9.0.5.v20130815</version>
             <scope>compile</scope>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>javax.validation</groupId>-->
+            <!--<artifactId>validation-api</artifactId>-->
+            <!--<version>1.1.0.Final</version>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.sun.jersey</groupId>
@@ -323,11 +348,16 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+            <version>4.1.7.RELEASE</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring-version}</version>
+            <version>${spring-security-version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -351,7 +381,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-acl</artifactId>
-            <version>${spring-version}</version>
+            <version>${spring-security-version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -371,7 +401,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${spring-version}</version>
+            <version>${spring-security-version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -383,7 +413,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
-            <version>${spring-version}</version>
+            <version>${spring-security-version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -399,7 +429,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${spring-version}</version>
+            <version>${spring-security-version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -427,7 +457,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-ldap</artifactId>
-            <version>${spring-version}</version>
+            <version>${spring-security-version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -439,7 +469,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
-            <version>${spring-version}</version>
+            <version>${spring-security-version}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -530,9 +560,30 @@
         </dependency>
 
         <dependency>
+            <groupId>c3p0</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.1.2</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit-version}</version>
+            <version>4.12</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>

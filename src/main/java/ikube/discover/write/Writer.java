@@ -36,7 +36,7 @@ public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWrite
 
     @Autowired
     @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Qualifier("ikube.experimental.listener.ListenerManager")
+    @Qualifier("ikube.discover.listener.ListenerManager")
     private ListenerManager listenerManager;
 
     private IndexWriter indexWriter;

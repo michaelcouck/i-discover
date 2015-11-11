@@ -3,7 +3,7 @@ package ikube.discover.database.model;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity()
+@Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Analysis extends Persistable {
 

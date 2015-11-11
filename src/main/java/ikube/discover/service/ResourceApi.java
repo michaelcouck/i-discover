@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
  * @since 20-11-2012
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
-public abstract class Resource {
+public abstract class ResourceApi {
 
     public static final String REQUEST = "request";
     private static final String SEPARATOR = "|";

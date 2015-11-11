@@ -50,14 +50,14 @@
           property:unreturnedConnectionTimeout="${jdbc.unreturnedConnectionTimeout}" />
 
 
-    <bean id="h2DataSourceBinder" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
-          property:staticMethod="ikube.toolkit.JndiInjector.bind">
-        <property name="arguments">
-            <array>
-                <value>nonXaDataSourceH2</value>
-                <ref local="nonXaDataSourceH2" />
-            </array>
-        </property>
-    </bean>
+    <!--<bean id="h2DataSourceBinder" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"-->
+          <!--property:staticMethod="ikube.toolkit.JndiInjector.bind">-->
+        <!--<property name="arguments">-->
+            <!--<array>-->
+                <!--<value>nonXaDataSourceH2</value>-->
+                <!--<ref local="nonXaDataSourceH2" />-->
+            <!--</array>-->
+        <!--</property>-->
+    <!--</bean>-->
 
 </beans>

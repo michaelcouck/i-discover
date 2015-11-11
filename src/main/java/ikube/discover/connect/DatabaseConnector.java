@@ -88,7 +88,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
 
     @Autowired
     @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Qualifier("ikube.experimental.listener.ListenerManager")
+    @Qualifier("ikube.discover.listener.ListenerManager")
     private ListenerManager listenerManager;
 
     public DatabaseConnector() {

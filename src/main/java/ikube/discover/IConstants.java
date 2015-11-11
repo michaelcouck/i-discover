@@ -68,6 +68,14 @@ public interface IConstants {
 
     String GRID_NAME = "i-discover";
 
+    /**
+     * The persistence units' names.
+     */
+    String PERSISTENCE_UNIT_H2 = "IkubePersistenceUnitH2";
+    String PERSISTENCE_UNIT_DB2 = "IkubePersistenceUnitDb2";
+    String PERSISTENCE_UNIT_ORACLE = "IkubePersistenceUnitOracle";
+    String PERSISTENCE_UNIT_POSTGRES = "IkubePersistenceUnitPostgres";
+
     String API_KEY = "3hBgqJHgsdADILee9gmw3rgmT91tI28Z";
 
     String ID = "id";

@@ -31,14 +31,14 @@ public class ListenerManager {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired(required = false)
+    @Autowired(required = true)
     @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Qualifier("ikube.experimental.listener.ListenerManager.listeners")
+    @Qualifier("ikube.discover.listener.ListenerManager.listeners")
     private Map<String, Map<String, List<IConsumer<IEvent<?, ?>>>>> listeners = new HashMap<String, Map<String,
             List<IConsumer<IEvent<?, ?>>>>>();
 
-    @Autowired(required = false)
-    @Qualifier("ikube.cluster.gg.ClusterManagerGridGain")
+    @Autowired(required = true)
+    @Qualifier("ikube.discover.cluster.IClusterManager")
     @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaAutowiredMembersInspection"})
     private ClusterManagerGridGain clusterManager;
 

@@ -3,10 +3,14 @@
 <beans
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.springframework.org/schema/beans"
+    xmlns:property="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
 
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/util
+            http://www.springframework.org/schema/util/spring-util.xsd">
 
     <description>This is the configuration for the Grid Gain grid</description>
 
@@ -32,11 +36,76 @@
     </bean>
 
     <bean
-        id="ikube.cluster.gg.ClusterManagerGridGain"
-        class="ikube.cluster.gg.ClusterManagerGridGain"
+        id="ikube.discover.cluster.IClusterManager"
+        class="ikube.discover.cluster.ClusterManagerGridGain"
         lazy-init="false"
         init-method="initialize"
         destroy-method="destroy"
         depends-on="org.gridgain.grid.GridConfiguration" />
+
+    <!--
+        And here we register the actors/listeners/observers to listen to specific events in the grid. The
+        data structure is a map of maps of lists
+    -->
+    <bean
+        id="ikube.discover.listener.ListenerManager"
+        class="ikube.discover.listener.ListenerManager"
+        init-method="addGridListeners"
+        lazy-init="true"
+        depends-on="ikube.discover.cluster.IClusterManager"
+        property:listeners-ref="ikube.discover.listener.ListenerManager.listeners"/>
+
+    <util:map id="ikube.discover.listener.ListenerManager.listeners">
+        <entry key="SystemMonitoringEvent" value-ref="system-event-listeners"/>
+        <entry key="IndexWriterEvent" value-ref="index-writer-event-listeners"/>
+        <entry key="OpenSearcherEvent" value-ref="open-search-event-listeners"/>
+        <entry key="StartDatabaseProcessingEvent" value-ref="start-database-processing-event-listeners"/>
+    </util:map>
+
+    <!-- Maps keyed by the context name -->
+    <util:map id="system-event-listeners">
+        <entry key="search-context" value-ref="search-context-system-listeners"/>
+    </util:map>
+    <util:map id="index-writer-event-listeners">
+        <entry key="search-context" value-ref="search-context-writer-listeners"/>
+    </util:map>
+    <util:map id="open-search-event-listeners">
+        <entry key="search-context" value-ref="search-context-searcher-listeners"/>
+    </util:map>
+    <util:map id="start-database-processing-event-listeners">
+        <entry key="search-context" value-ref="search-context-database-listeners"/>
+    </util:map>
+
+    <!-- Lists of writers for the context name -->
+    <util:list id="search-context-system-listeners">
+        <ref local="ikube.discover.publish.SystemMonitoringPublisher"/>
+    </util:list>
+    <util:list id="search-context-writer-listeners">
+        <ref local="ikube.discover.write.Writer"/>
+        <ref local="ikube.discover.publish.IndexWriterPublisher"/>
+    </util:list>
+    <util:list id="search-context-searcher-listeners">
+        <ref local="ikube.discover.search.Searcher"/>
+    </util:list>
+    <util:list id="search-context-database-listeners">
+        <ref local="ikube.discover.connect.DatabaseConnector"/>
+    </util:list>
+
+    <!-- These are the actors/listeners/observers that will act on the events published to the grid -->
+    <bean
+        id="ikube.discover.search.Searcher"
+        class="ikube.discover.search.Searcher"/>
+    <bean
+        id="ikube.discover.connect.DatabaseConnector"
+        class="ikube.discover.connect.DatabaseConnector"/>
+    <bean
+        id="ikube.discover.write.Writer"
+        class="ikube.discover.write.Writer"/>
+    <bean
+        id="ikube.discover.publish.IndexWriterPublisher"
+        class="ikube.discover.publish.IndexWriterPublisher"/>
+    <bean
+        id="ikube.discover.publish.SystemMonitoringPublisher"
+        class="ikube.discover.publish.SystemMonitoringPublisher"/>
 
 </beans>
