@@ -30,24 +30,24 @@
 
     <context:property-placeholder
         location="classpath*:**/experimental/spring.properties"
-        properties-ref="ikube.toolkit.PropertyConfigurer" />
+        properties-ref="ikube.discover.tool.PropertyConfigurer" />
 
-    <bean
-        id="ikube.toolkit.Logging"
-        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
-        property:staticMethod="ikube.toolkit.LOGGING.configure"/>
+    <!--<bean-->
+        <!--id="ikube.toolkit.Logging"-->
+        <!--class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"-->
+        <!--property:staticMethod="ikube.toolkit.LOGGING.configure"/>-->
 
     <!-- This bean will look through the classpath and load every Spring properties file it finds. -->
     <bean
-        id="ikube.toolkit.PropertyConfigurer"
-        class="ikube.toolkit.PropertyConfigurer"
+        id="ikube.discover.tool.PropertyConfigurer"
+        class="ikube.discover.tool.PropertyConfigurer"
         lazy-init="false"
         init-method="initialize"
         property:fileNamePattern="spring.properties"/>
 
     <!-- Turn on AspectJ @Configurable support -->
-    <context:spring-configured />
-    <context:component-scan base-package="ikube.discover" />
+    <!--<context:spring-configured />-->
+    <!--<context:component-scan base-package="ikube.discover" />-->
 
     <import resource="spring-h2-jdbc.xml"/>
     <import resource="spring-grid-gain.xml"/>
@@ -159,7 +159,7 @@
         lazy-init="false"/>
 
     <util:list id="contexts">
-        <ref local="search-context"/>
+        <ref bean="search-context" />
     </util:list>
 
     <bean

@@ -16,18 +16,18 @@
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		
 		<properties>
-			<property name="openjpa.Connection2UserName" value="sa" />
-			<property name="openjpa.Connection2Password" value="" />
-			<property name="openjpa.Connection2URL" value="jdbc:h2:file:i-discover" />
-			<property name="openjpa.Connection2DriverName" value="org.h2.Driver" />
-			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
+			<!--<property name="openjpa.Connection2UserName" value="sa" />-->
+			<!--<property name="openjpa.Connection2Password" value="" />-->
+			<!--<property name="openjpa.Connection2URL" value="jdbc:h2:file:i-discover" />-->
+			<!--<property name="openjpa.Connection2DriverName" value="org.h2.Driver" />-->
+			<!--<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>-->
 
-			<property name="openjpa.ConnectionUserName" value="sa" />
-			<property name="openjpa.ConnectionPassword" value="" />
-			<property name="openjpa.ConnectionURL" value="jdbc:h2:file:i-discover" />
-			<property name="openjpa.ConnectionDriverName" value="org.h2.Driver" />
-			<property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>
-            <property name="openjpa.InverseManager" value="true(Action=warn)"/>
+			<!--<property name="openjpa.ConnectionUserName" value="sa" />-->
+			<!--<property name="openjpa.ConnectionPassword" value="" />-->
+			<!--<property name="openjpa.ConnectionURL" value="jdbc:h2:file:i-discover" />-->
+			<!--<property name="openjpa.ConnectionDriverName" value="org.h2.Driver" />-->
+			<!--<property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>-->
+            <!--<property name="openjpa.InverseManager" value="true(Action=warn)"/>-->
 
             <!--<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='drop,add')" />-->
             <!-- <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" /> -->
