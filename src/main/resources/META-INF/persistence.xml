@@ -8,7 +8,7 @@
 		http://java.sun.com/xml/ns/persistence
     	http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" version="1.0">
 
-	<persistence-unit name="IkubePersistenceUnitH2" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="IdiscoverPersistenceUnitH2" transaction-type="RESOURCE_LOCAL">
 		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
 
         <class>ikube.discover.database.model.Analysis</class>
@@ -16,71 +16,23 @@
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		
 		<properties>
-			<!--<property name="openjpa.Connection2UserName" value="sa" />-->
-			<!--<property name="openjpa.Connection2Password" value="" />-->
-			<!--<property name="openjpa.Connection2URL" value="jdbc:h2:file:i-discover" />-->
-			<!--<property name="openjpa.Connection2DriverName" value="org.h2.Driver" />-->
-			<!--<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>-->
+			<property name="openjpa.Connection2UserName" value="sa" />
+			<property name="openjpa.Connection2Password" value="" />
+			<property name="openjpa.Connection2URL" value="jdbc:h2:file:i-discover" />
+			<property name="openjpa.Connection2DriverName" value="org.h2.Driver" />
+			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true,Indexes=true,SchemaAction='drop,add',SchemaAction='add,deleteTableContents')"/>
 
-			<!--<property name="openjpa.ConnectionUserName" value="sa" />-->
-			<!--<property name="openjpa.ConnectionPassword" value="" />-->
-			<!--<property name="openjpa.ConnectionURL" value="jdbc:h2:file:i-discover" />-->
-			<!--<property name="openjpa.ConnectionDriverName" value="org.h2.Driver" />-->
-			<!--<property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>-->
-            <!--<property name="openjpa.InverseManager" value="true(Action=warn)"/>-->
+			<property name="openjpa.ConnectionUserName" value="sa" />
+			<property name="openjpa.ConnectionPassword" value="" />
+			<property name="openjpa.ConnectionURL" value="jdbc:h2:file:i-discover" />
+			<property name="openjpa.ConnectionDriverName" value="org.h2.Driver" />
+			<property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>
+            <property name="openjpa.InverseManager" value="true(Action=warn)"/>
 
             <!--<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='drop,add')" />-->
-            <!-- <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" /> -->
-			<!-- ForeignKeys=true,Indexes=true,SchemaAction='drop,add',SchemaAction='add,deleteTableContents' -->
+            <!--<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" /> -->
+			<!--ForeignKeys=true,Indexes=true,SchemaAction='drop,add',SchemaAction='add,deleteTableContents' -->
 		</properties>
-	</persistence-unit>
-	
- 	<persistence-unit name="IkubePersistenceUnitDb2" transaction-type="RESOURCE_LOCAL">
-		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-
-        <class>ikube.discover.database.model.Analysis</class>
-		
-		<exclude-unlisted-classes>false</exclude-unlisted-classes>
-		
-		 <!--<properties>
-			<property name="openjpa.Connection2UserName" value="bla" />
-			<property name="openjpa.Connection2Password" value="bla" />
-			<property name="openjpa.Connection2URL" value="jdbc:db2://ikube.be:50000/ikube" />
-			<property name="openjpa.Connection2DriverName" value="com.ibm.db2.jcc.DB2Driver" />
-			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
-		</properties>-->
-	</persistence-unit>
-	
-	<persistence-unit name="IkubePersistenceUnitOracle" transaction-type="RESOURCE_LOCAL">
-		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-
-        <class>ikube.discover.database.model.Analysis</class>
-		
-		<exclude-unlisted-classes>false</exclude-unlisted-classes>
-		
-		<!-- <properties>
-			<property name="openjpa.Connection2UserName" value="oracle" />
-			<property name="openjpa.Connection2Password" value="xxx" />
-			<property name="openjpa.Connection2URL" value="jdbc:oracle:thin:@//81.95.118.139:1521/xe" />
-			<property name="openjpa.Connection2DriverName" value="oracle.jdbc.driver.OracleDriver" />
-			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
-		</properties> -->
-	</persistence-unit>
-	
-	<persistence-unit name="IkubePersistenceUnitPostgres" transaction-type="RESOURCE_LOCAL">
-		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-
-        <class>ikube.discover.database.model.Analysis</class>
-
-		<exclude-unlisted-classes>false</exclude-unlisted-classes>
-		
-		<!-- <properties>
-			<property name="openjpa.Connection2UserName" value="postgres" />
-			<property name="openjpa.Connection2Password" value="xxx" />
-			<property name="openjpa.Connection2URL" value="jdbc:postgresql://81.95.118.139:5432/ikube" />
-			<property name="openjpa.Connection2DriverName" value="org.postgresql.Driver" />
-			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
-		</properties> -->
 	</persistence-unit>
 	
 </persistence>

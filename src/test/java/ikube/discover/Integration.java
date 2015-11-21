@@ -46,12 +46,12 @@ public class Integration {
     @Before
     public void before() {
         THREAD.initialize();
-        dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
+        // dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
     }
 
     @After
     public void after() {
-        dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
+        // dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
         shuttingDown = Boolean.TRUE;
         THREAD.sleep(30000);
     }

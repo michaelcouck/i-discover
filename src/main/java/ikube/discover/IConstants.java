@@ -8,11 +8,9 @@ import com.google.gson.GsonBuilder;
 import java.lang.reflect.Field;
 
 /**
- * This class publishes the processing data to the dashboard.
- *
  * @author Michael Couck
  * @version 01.00
- * @since 09-07-2015
+ * @since 10-11-2015
  */
 public interface IConstants {
 
@@ -71,10 +69,7 @@ public interface IConstants {
     /**
      * The persistence units' names.
      */
-    String PERSISTENCE_UNIT_H2 = "IkubePersistenceUnitH2";
-    String PERSISTENCE_UNIT_DB2 = "IkubePersistenceUnitDb2";
-    String PERSISTENCE_UNIT_ORACLE = "IkubePersistenceUnitOracle";
-    String PERSISTENCE_UNIT_POSTGRES = "IkubePersistenceUnitPostgres";
+    String PERSISTENCE_UNIT_H2 = "IdiscoverPersistenceUnitH2";
 
     String API_KEY = "3hBgqJHgsdADILee9gmw3rgmT91tI28Z";
 

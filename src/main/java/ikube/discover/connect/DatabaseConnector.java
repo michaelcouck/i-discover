@@ -81,8 +81,8 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
     private int databasePort = 8082;
 
     // The url for the database
-    @Value("${database-url:jdbc:h2:tcp://localhost:8082/ikube;DB_CLOSE_ON_EXIT=FALSE}")
-    private String url = "jdbc:h2:tcp://localhost:8082/ikube;DB_CLOSE_ON_EXIT=FALSE";
+    @Value("${database-url:jdbc:h2:tcp://localhost:8082/i-discover;DB_CLOSE_ON_EXIT=FALSE}")
+    private String url = "jdbc:h2:tcp://localhost:8082/i-discover;DB_CLOSE_ON_EXIT=FALSE";
     // And this we get from the driver
     private Connection connection;
 
@@ -95,6 +95,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
         jsch = new JSch();
         config = new Properties();
         config.put("StrictHostKeyChecking", "no");
+        config.put("kex", "diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group-exchange-sha256");
         logger.info("Database : " + this);
     }
 
@@ -104,6 +105,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
      * TODO: this method! Other nodes must still be able to set the timestamp
      */
     @Override
+    @SuppressWarnings("JpaQueryApiInspection")
     public void notify(final StartDatabaseProcessingEvent startDatabaseProcessingEvent) {
         Context context = startDatabaseProcessingEvent.getContext();
         logger.debug("Starting database on : " + context.getName());
@@ -124,12 +126,12 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
             ResultSet resultSet = preparedStatement.executeQuery();
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
-            List<Map<Object, Object>> data = new ArrayList<Map<Object, Object>>();
+            List<Map<Object, Object>> data = new ArrayList<>();
 
             boolean next = resultSet.next();
             if (next) {
                 do {
-                    Map<Object, Object> row = new HashMap<Object, Object>();
+                    Map<Object, Object> row = new HashMap<>();
                     for (int columnIndex = 1; columnIndex <= resultSetMetaData.getColumnCount(); columnIndex++) {
                         Object columnName = resultSetMetaData.getColumnName(columnIndex);
                         Object columnValue = resultSet.getObject(columnIndex);
@@ -143,7 +145,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
                     if (nextAndDataSizeLimitOrNotNext) {
                         //noinspection ConstantConditions
                         logger.debug("Fire event : " + nextAndDataSizeLimit + ", " + nextAndDataSizeLimitOrNotNext);
-                        List<Map<Object, Object>> clonedData = new ArrayList<Map<Object, Object>>(data);
+                        List<Map<Object, Object>> clonedData = new ArrayList<>(data);
                         fire(new IndexWriterEvent(context, null, clonedData));
                         data.clear();
                     }

@@ -78,17 +78,17 @@
 
     <!-- Lists of writers for the context name -->
     <util:list id="search-context-system-listeners">
-        <ref local="ikube.discover.publish.SystemMonitoringPublisher"/>
+        <ref bean="ikube.discover.publish.SystemMonitoringPublisher"/>
     </util:list>
     <util:list id="search-context-writer-listeners">
-        <ref local="ikube.discover.write.Writer"/>
-        <ref local="ikube.discover.publish.IndexWriterPublisher"/>
+        <ref bean="ikube.discover.write.Writer"/>
+        <ref bean="ikube.discover.publish.IndexWriterPublisher"/>
     </util:list>
     <util:list id="search-context-searcher-listeners">
-        <ref local="ikube.discover.search.Searcher"/>
+        <ref bean="ikube.discover.search.Searcher"/>
     </util:list>
     <util:list id="search-context-database-listeners">
-        <ref local="ikube.discover.connect.DatabaseConnector"/>
+        <ref bean="ikube.discover.connect.DatabaseConnector"/>
     </util:list>
 
     <!-- These are the actors/listeners/observers that will act on the events published to the grid -->

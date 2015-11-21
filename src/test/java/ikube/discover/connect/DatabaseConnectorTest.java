@@ -8,11 +8,14 @@ import ikube.discover.listener.IEvent;
 import ikube.discover.listener.IndexWriterEvent;
 import ikube.discover.listener.ListenerManager;
 import ikube.discover.listener.StartDatabaseProcessingEvent;
+import mockit.Deencapsulation;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -29,11 +32,11 @@ import static org.mockito.Matchers.any;
  * @version 01.00
  * @since 09-07-2015
  */
-public class DatabaseTest extends AbstractTest {
+public class DatabaseConnectorTest extends AbstractTest {
 
     @Spy
     @InjectMocks
-    private DatabaseConnector database;
+    private DatabaseConnector databaseConnector;
 
     @Mock
     private Session session;
@@ -63,14 +66,14 @@ public class DatabaseTest extends AbstractTest {
                 // Do nothing...
                 return Boolean.TRUE;
             }
-        }).when(database).createSshTunnel();
+        }).when(databaseConnector).createSshTunnel();
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
                 // Do nothing...
                 return Boolean.TRUE;
             }
-        }).when(database).createDatabaseConnection();
+        }).when(databaseConnector).createDatabaseConnection();
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
@@ -104,12 +107,23 @@ public class DatabaseTest extends AbstractTest {
         Mockito.when(startDatabaseProcessingEvent.getContext()).thenReturn(context);
         Mockito.when(context.getModification()).thenReturn(new Timestamp(System.currentTimeMillis()));
 
-        database.notify(startDatabaseProcessingEvent);
+        databaseConnector.notify(startDatabaseProcessingEvent);
         Mockito.verify(listenerManager, Mockito.times(1)).fire(any(IEvent.class), any(Boolean.class));
         IndexWriterEvent indexWriterEvent = (IndexWriterEvent) atomicReference.get();
         List<Map<Object, Object>> changedRecords = indexWriterEvent.getData();
         assertEquals("1:1", "one", changedRecords.get(0).get("one"));
         assertEquals("3:3", "five", changedRecords.get(2).get("three"));
+    }
+
+    @Test
+    @Ignore
+    public void createSshTunnel() throws JSchException {
+        // sshUserid, remoteHostForSshAndDatabase, targetSshPort
+        Deencapsulation.setField(databaseConnector, "sshUserid", "laptop");
+        Deencapsulation.setField(databaseConnector, "sshPassword", "caherline");
+        Deencapsulation.setField(databaseConnector, "remoteHostForSshAndDatabase", "localhost");
+        Deencapsulation.setField(databaseConnector, "targetSshPort", 22);
+        databaseConnector.createSshTunnel();
     }
 
 }
