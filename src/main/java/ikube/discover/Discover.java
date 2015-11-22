@@ -16,23 +16,19 @@
 
 package ikube.discover;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableAutoConfiguration
-public class Discover extends SpringBootServletInitializer {
+// @EnableAutoConfiguration
+public class Discover /* extends SpringBootServletInitializer */ {
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(Discover.class);
-    }
+    //@Override
+    //protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+    //    return application.sources(Discover.class);
+    //}
 
-    public static void main(String[] args) {
-        SpringApplication.run(Discover.class, args);
-    }
+    //public static void main(String[] args) {
+    //    SpringApplication.run(Discover.class, args);
+    //}
 
 }

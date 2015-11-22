@@ -1,0 +1,1 @@
+The persistence.xml is in it's own directory so the server does not find it and initialize the persistence context twice.

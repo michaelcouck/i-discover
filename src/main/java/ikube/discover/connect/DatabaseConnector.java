@@ -118,7 +118,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
             context.setModification(new Timestamp(System.currentTimeMillis()));
             Timestamp to = context.getModification();
 
-            String sql = "SELECT * FROM rule WHERE timestamp >= ? AND timestamp < ? ORDER BY timestamp ASC";
+            String sql = "SELECT * FROM analysis WHERE timestamp >= ? AND timestamp < ? ORDER BY timestamp ASC";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setTimestamp(1, from);
             preparedStatement.setTimestamp(2, to);

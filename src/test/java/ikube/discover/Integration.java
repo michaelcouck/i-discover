@@ -46,12 +46,12 @@ public class Integration {
     @Before
     public void before() {
         THREAD.initialize();
-        dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
+        // dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
     }
 
     @After
     public void after() {
-        dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
+        // dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
         shuttingDown = Boolean.TRUE;
         THREAD.sleep(30000);
     }
@@ -60,7 +60,7 @@ public class Integration {
     public void process() throws SQLException, JSchException {
         addRules();
         addSearches();
-        THREAD.sleep(1000 * 6000);
+        THREAD.sleep(1000 * 600);
     }
 
     private void addSearches() {
@@ -102,12 +102,13 @@ public class Integration {
                         rules.add(rule);
                     }
 
+                    logger.error("Persisting batch {}", rules.size());
                     dataBase.persistBatch(rules);
 
                     count = dataBase.count(Analysis.class);
                     long sleep = Math.abs((start + 1000) - System.currentTimeMillis());
                     if (count % 1000 == 0) {
-                        logger.info("Rule count : {}, sleeping for : {}", count, sleep);
+                        logger.error("Rule count : {}, sleeping for : {}", count, sleep);
                     }
                     THREAD.sleep(sleep);
                 } while (!shuttingDown);

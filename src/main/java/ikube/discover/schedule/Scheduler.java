@@ -44,7 +44,7 @@ public class Scheduler implements IProducer<IEvent<?, ?>> {
         clusterManager.send(IConstants.GRID_NAME, event);
     }
 
-    @Scheduled(initialDelay = 10000, fixedRate = 10000)
+    @Scheduled(initialDelay = 3000, fixedRate = 10000)
     public void systemSchedule() throws Exception {
         // Start the database(s) processing
         for (final Context context : contexts) {
@@ -54,7 +54,7 @@ public class Scheduler implements IProducer<IEvent<?, ?>> {
         }
     }
 
-    @Scheduled(initialDelay = 60000, fixedRate = 10000)
+    @Scheduled(initialDelay = 5000, fixedRate = 10000)
     public void databaseSchedule() throws Exception {
         // Start the database(s) processing
         for (final Context context : contexts) {

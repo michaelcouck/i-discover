@@ -22,12 +22,12 @@ public abstract class Persistable implements Serializable {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "persistable")
-    @SequenceGenerator(name = "persistable", sequenceName = "persistable", allocationSize = 1000)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PERSISTABLE")
+    @SequenceGenerator(name = "PERSISTABLE", sequenceName = "PERSISTABLE", allocationSize = 1000)
     protected long id;
 
     @Column
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(value = java.util.Date.class)
     private Timestamp timestamp;
 
     public long getId() {

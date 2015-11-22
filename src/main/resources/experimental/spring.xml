@@ -40,16 +40,23 @@
         init-method="initialize"
         property:fileNamePattern="spring.properties"/>
 
+    <context:spring-configured />
+    <context:component-scan base-package="ikube" />
+    <context:annotation-config/>
+    <transaction:annotation-driven transaction-manager="transactionManager"/>
+
     <import resource="spring-h2-jdbc.xml"/>
     <import resource="spring-grid-gain.xml"/>
 
     <bean
         name="defaultPersistenceUnitManager"
         class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager"
+        depends-on="h2DataSourceBinder"
         property:persistenceXmlLocations-ref="persistenceXmlLocations"
         property:defaultDataSource-ref="${idiscover.dataSource}"/>
+     <!-- property:defaultDataSource-ref="${idiscover.dataSource}" -->
     <util:list id="persistenceXmlLocations">
-        <value>classpath*:META-INF/persistence.xml</value>
+        <value>classpath*:META-INF/persistence/persistence.xml</value>
     </util:list>
 
     <!-- This bean does the injection of the entity manager into the dao. -->
@@ -65,62 +72,21 @@
         lazy-init="false"
         property:jpaVendorAdapter-ref="jpaAdapter"
         property:jpaPropertyMap-ref="jpaPropertyMap"
-        property:dataSource-ref="${idiscover.dataSource}"
         property:persistenceUnitName="${idiscover.persistenceUnit}"
         property:persistenceUnitManager-ref="defaultPersistenceUnitManager"
-        property:loadTimeWeaver-ref="loadTimeWeaver"/>
+        property:loadTimeWeaver-ref="loadTimeWeaver"
+        property:dataSource-ref="${idiscover.dataSource}"/>
+    <!-- property:dataSource-ref="${idiscover.dataSource}" -->
+
+    <!-- property:loadTimeWeaver-ref="loadTimeWeaver" -->
     <bean
         name="loadTimeWeaver"
         class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
     <bean
         name="jpaAdapter"
-        class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter"
+        class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter"
         property:database="${idiscover.dataSourceType}"
-        property:showSql="false"/>
-    <util:map id="jpaPropertyMap">
-        <!-- <entry key="openjpa.ConnectionFactoryProperties" value="PrettyPrint=true,PrettyPrintLineLength=150" /> -->
-        <entry key="openjpa.Log"
-               value="DefaultLevel=INFO,JDBC=INFO,SQL=INFO,File=openjpa.log,Runtime=INFO,Tool=INFO"/>
-
-        <entry key="openjpa.DataCache" value="true(CacheSize=0,SoftReferenceSize=0)"/>
-        <entry key="openjpa.QueryCache" value="true(CacheSize=0,SoftReferenceSize=0)"/>
-
-        <entry key="openjpa.Optimistic" value="true"/>
-        <entry key="openjpa.ReadLockLevel" value="none"/>
-        <entry key="openjpa.WriteLockLevel" value="write"/>
-        <entry key="openjpa.NontransactionalRead" value="true"/>
-        <entry key="openjpa.LockTimeout" value="60000"/>
-
-        <!--
-            There is a bug somewhere, in OpenJpa or H2 but the 'FOR UPDATE LIMIT ?'
-             seems to be rejected by H2, and incidentally for MySql too. Perhaps the others
-             accept this syntax.
-        -->
-        <!-- (VersionCheckOnReadLock=false,VersionUpdateOnWriteLock=false) -->
-        <!--<entry key="openjpa.LockManager" value="pessimistic"/>-->
-
-        <entry key="openjpa.Multithreaded" value="true"/>
-        <entry key="openjpa.AutoDetach" value="commit"/>
-        <entry key="openjpa.FlushBeforeQueries" value="false"/>
-        <entry key="openjpa.DynamicEnhancementAgent" value="true"/>
-        <entry key="openjpa.RuntimeUnenhancedClasses" value="supported"/>
-        <entry key="openjpa.jdbc.DBDictionary" value="${idiscover.jdbc.dictionary}"/>
-
-        <entry key="openjpa.Connection2UserName" value="${idiscover.jdbc.userid}"/>
-        <entry key="openjpa.Connection2Password" value="${idiscover.jdbc.password}"/>
-        <entry key="openjpa.Connection2URL" value="${idiscover.jdbc.url}"/>
-        <entry key="openjpa.Connection2DriverName" value="${idiscover.jdbc.driver}"/>
-        <entry key="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
-
-        <entry key="openjpa.ConnectionUserName" value="${idiscover.jdbc.userid}"/>
-        <entry key="openjpa.ConnectionPassword" value="${idiscover.jdbc.password}"/>
-        <entry key="openjpa.ConnectionURL" value="${idiscover.jdbc.url}"/>
-        <entry key="openjpa.ConnectionDriverName" value="${idiscover.jdbc.driver}"/>
-        <entry key="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true,Indexes=true,SchemaAction='drop,add',SchemaAction='add,deleteTableContents')"/>
-        <entry key="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>
-        <entry key="openjpa.InverseManager" value="true(Action=warn)"/>
-    </util:map>
-
+        property:showSql="true"/>
     <transaction:advice id="transactionAdvice" transaction-manager="transactionManager">
         <transaction:attributes>
             <transaction:method name="find*"/>
@@ -131,27 +97,66 @@
         </transaction:attributes>
     </transaction:advice>
 
-    <aop:config>
-        <aop:pointcut id="dataBaseJpaH2" expression="execution(* ikube.discover.database.DataBaseJpaH2.*(..))"/>
-        <!--<aop:pointcut id="dataBaseJpaDb2" expression="execution(* ikube.discover.database.DataBaseJpaDb2.*(..))"/>-->
-        <!--<aop:pointcut id="dataBaseJpaOracle" expression="execution(* ikube.discover.database.DataBaseJpaOracle.*(..))"/>-->
-        <!--<aop:pointcut id="dataBaseJpaPostgres" expression="execution(* ikube.discover.database.DataBaseJpaPostgres.*(..))"/>-->
-        <!--<aop:pointcut id="dataBaseAbstract" expression="execution(* ikube.discover.database.ADataBaseJpa.*(..))"/>-->
-        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="dataBaseJpaH2"/>
-        <!--<aop:advisor advice-ref="transactionAdvice" pointcut-ref="dataBaseJpaDb2"/>-->
-        <!--<aop:advisor advice-ref="transactionAdvice" pointcut-ref="dataBaseJpaOracle"/>-->
-        <!--<aop:advisor advice-ref="transactionAdvice" pointcut-ref="dataBaseJpaPostgres"/>-->
-        <!--<aop:advisor advice-ref="transactionAdvice" pointcut-ref="dataBaseAbstract"/>-->
-    </aop:config>
+    <util:map id="jpaPropertyMap">
+        <!--<property name="javax.persistence.jdbc.user" value="sa"/>-->
+        <!--<property name="javax.persistence.jdbc.password" value=""/>-->
+        <!--<property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>-->
+        <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:file:i-discover"/>-->
+        <!--<entry key="eclipselink.ddl-generation" value="create-tables"/>-->
+        <!--<entry key="eclipselink.logging.level.sql" value="FINEST"/>-->
+        <!--<entry key="eclipselink.logging.parameters" value="true"/>-->
+        <!--<entry key="eclipselink.ddl-generation.output-mode" value="both"/>-->
+
+        <!-- <entry key="openjpa.ConnectionFactoryProperties" value="PrettyPrint=true,PrettyPrintLineLength=150" /> -->
+        <!--<entry key="openjpa.Log" value="DefaultLevel=TRACE,JDBC=TRACE,SQL=TRACE,File=openjpa.log,Runtime=TRACE,Tool=TRACE"/>-->
+        <!--<entry key="openjpa.ConnectionFactoryProperties" value="PrintParameters=true" />-->
+
+        <!--<entry key="openjpa.DataCache" value="true(CacheSize=0,SoftReferenceSize=0)"/>-->
+        <!--<entry key="openjpa.QueryCache" value="true(CacheSize=0,SoftReferenceSize=0)"/>-->
+
+        <!--<entry key="openjpa.Optimistic" value="true"/>-->
+        <!--<entry key="openjpa.ReadLockLevel" value="none"/>-->
+        <!--<entry key="openjpa.WriteLockLevel" value="write"/>-->
+        <!--<entry key="openjpa.NontransactionalRead" value="true"/>-->
+        <!--<entry key="openjpa.LockTimeout" value="60000"/>-->
+
+        <!--<entry key="openjpa.Multithreaded" value="true"/>-->
+        <!--<entry key="openjpa.AutoDetach" value="commit"/>-->
+        <!--<entry key="openjpa.FlushBeforeQueries" value="true"/> &lt;!&ndash; Dangerous, should be false &ndash;&gt;-->
+        <!--<entry key="openjpa.DynamicEnhancementAgent" value="false"/>-->
+        <!--<entry key="openjpa.RuntimeUnenhancedClasses" value="unsupported"/>-->
+        <!--<entry key="openjpa.jdbc.DBDictionary" value="${idiscover.jdbc.dictionary}"/>-->
+        <!--<entry key="openjpa.MetaDataFactory" value="jpa(Types=ikube.discover.database.model.Persistable;ikube.discover.database.model.Analysis)"/>-->
+        <!--<entry key="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>-->
+
+        <!--
+            There is a bug somewhere, in OpenJpa or H2 but the 'FOR UPDATE LIMIT ?'
+             seems to be rejected by H2, and incidentally for MySql too. Perhaps the others
+             accept this syntax.
+        -->
+        <!-- (VersionCheckOnReadLock=false,VersionUpdateOnWriteLock=false) -->
+        <!--<entry key="openjpa.LockManager" value="pessimistic"/>-->
+
+        <!--<entry key="openjpa.Connection2UserName" value="${idiscover.jdbc.userid}"/>-->
+        <!--<entry key="openjpa.Connection2Password" value="${idiscover.jdbc.password}"/>-->
+        <!--<entry key="openjpa.Connection2URL" value="${idiscover.jdbc.url}"/>-->
+        <!--<entry key="openjpa.Connection2DriverName" value="${idiscover.jdbc.driver}"/>-->
+
+        <!--<entry key="openjpa.ConnectionUserName" value="${idiscover.jdbc.userid}"/>-->
+        <!--<entry key="openjpa.ConnectionPassword" value="${idiscover.jdbc.password}"/>-->
+        <!--<entry key="openjpa.ConnectionURL" value="${idiscover.jdbc.url}"/>-->
+        <!--<entry key="openjpa.ConnectionDriverName" value="${idiscover.jdbc.driver}"/>-->
+
+        <!-- ,Indexes=true,SchemaAction='drop,add',SchemaAction='add,deleteTableContents' -->
+        <!--<entry key="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>-->
+        <!--<entry key="openjpa.InverseManager" value="true(Action=warn)"/>-->
+    </util:map>
 
     <bean
         name="ikube.discover.database.IDataBase"
         class="ikube.discover.database.DataBaseJpaH2"
-        lazy-init="false"/>
-
-    <util:list id="contexts">
-        <ref bean="search-context" />
-    </util:list>
+        lazy-init="true"
+        depends-on="nonXaDataSourceH2"/>
 
     <bean
         id="search-context"
@@ -165,5 +170,14 @@
         lazy-init="false"
         depends-on="ikube.discover.cluster.IClusterManager"
         property:clusterManager-ref="ikube.discover.cluster.IClusterManager"/>
+
+    <aop:config>
+        <aop:pointcut id="dataBaseJpaH2" expression="execution(* ikube.discover.database.DataBaseJpaH2.*(..))"/>
+        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="dataBaseJpaH2"/>
+    </aop:config>
+
+    <util:list id="contexts">
+        <ref bean="search-context" />
+    </util:list>
 
 </beans>
