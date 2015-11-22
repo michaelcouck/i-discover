@@ -74,14 +74,15 @@
         property:jpaPropertyMap-ref="jpaPropertyMap"
         property:persistenceUnitName="${idiscover.persistenceUnit}"
         property:persistenceUnitManager-ref="defaultPersistenceUnitManager"
-        property:loadTimeWeaver-ref="loadTimeWeaver"
         property:dataSource-ref="${idiscover.dataSource}"/>
-    <!-- property:dataSource-ref="${idiscover.dataSource}" -->
+    <!--
+        property:loadTimeWeaver-ref="loadTimeWeaver"
+        property:dataSource-ref="${idiscover.dataSource}"
+    -->
 
-    <!-- property:loadTimeWeaver-ref="loadTimeWeaver" -->
-    <bean
-        name="loadTimeWeaver"
-        class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+    <!--<bean-->
+        <!--name="loadTimeWeaver"-->
+        <!--class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>-->
     <bean
         name="jpaAdapter"
         class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter"
