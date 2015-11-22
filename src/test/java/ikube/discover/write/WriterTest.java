@@ -5,6 +5,7 @@ import ikube.discover.AbstractTest;
 import ikube.discover.tool.THREAD;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Spy;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -42,6 +43,7 @@ public class WriterTest extends AbstractTest {
     }
 
     @Test
+    @Ignore
     public void createDocuments() throws SQLException, JSchException {
         List<Map<Object, Object>> records = Arrays.asList(
                 getMap(new Object[]{"one", "two", "three"}, new Object[]{"one", "two", "three"}),
