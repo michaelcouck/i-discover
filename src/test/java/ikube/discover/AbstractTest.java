@@ -1,5 +1,6 @@
 package ikube.discover;
 
+import ikube.discover.tool.LOGGING;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
@@ -27,6 +28,10 @@ import java.util.List;
 @Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractTest {
+
+    static {
+        LOGGING.configure();
+    }
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 

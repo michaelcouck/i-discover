@@ -2,7 +2,7 @@ package ikube.discover.listener;
 
 import ikube.discover.AbstractTest;
 import ikube.discover.Context;
-import ikube.discover.cluster.ClusterManagerGridGain;
+import ikube.discover.grid.ClusterManagerGridGain;
 import ikube.discover.tool.THREAD;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

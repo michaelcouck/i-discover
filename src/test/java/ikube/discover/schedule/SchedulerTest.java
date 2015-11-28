@@ -3,7 +3,7 @@ package ikube.discover.schedule;
 import com.jcraft.jsch.JSchException;
 import ikube.discover.AbstractTest;
 import ikube.discover.Context;
-import ikube.discover.cluster.ClusterManagerGridGain;
+import ikube.discover.grid.ClusterManagerGridGain;
 import ikube.discover.connect.DatabaseConnector;
 import ikube.discover.write.Writer;
 import org.apache.lucene.document.Document;

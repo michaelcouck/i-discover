@@ -37,7 +37,7 @@
 
     <bean
         id="ikube.discover.cluster.IClusterManager"
-        class="ikube.discover.cluster.ClusterManagerGridGain"
+        class="ikube.discover.grid.ClusterManagerGridGain"
         lazy-init="false"
         init-method="initialize"
         destroy-method="destroy"

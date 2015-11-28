@@ -258,7 +258,7 @@ public final class URI {
     /**
      * This method will get the ip address of the machine. If the machine is connected to the net then the first ip
      * that is not the home
-     * interface, i.e. not the localhost which is not particularly useful in a cluster. So essentially we are looking
+     * interface, i.e. not the localhost which is not particularly useful in a grid. So essentially we are looking
      * for the ip that looks
      * like 192.... or 10.215.... could be the real ip from the DNS on the ISP servers of course, but not 127.0.0.1,
      * or on Linux 127.0.1.1

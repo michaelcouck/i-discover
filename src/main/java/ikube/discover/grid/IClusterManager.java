@@ -1,4 +1,4 @@
-package ikube.discover.cluster;
+package ikube.discover.grid;
 
 import org.springframework.stereotype.Service;
 
@@ -8,9 +8,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 /**
- * This is the interface that will synchronize and coordinate the servers in the cluster. The
+ * This is the interface that will synchronize and coordinate the servers in the grid. The
  * implementations are critical to the functioning of Ikube. Along with this is the functionality that
- * will distribute the searches in the cluster, as well as the analytics. This class, because it controls the grid, will
+ * will distribute the searches in the grid, as well as the analytics. This class, because it controls the grid, will
  * also be responsible for the persistence of the searches in the database. Typically the grid functionality will be
  * used as a write delay to the database.
  *
@@ -22,36 +22,36 @@ import java.util.concurrent.Future;
 public interface IClusterManager {
 
     /**
-     * This method will lock, or try to lock the cluster.
+     * This method will lock, or try to lock the grid.
      *
      * @param name the name of the lock, must be unique
-     * @return whether the cluster was successfully locked
+     * @return whether the grid was successfully locked
      */
     boolean lock(final String name);
 
     /**
-     * Unlocks the cluster. The server can only unlock the cluster if it already has the lock.
+     * Unlocks the grid. The server can only unlock the grid if it already has the lock.
      *
      * @param name the name of the lock, must be unique
-     * @return whether the cluster was unlocked by this server
+     * @return whether the grid was unlocked by this server
      */
     boolean unlock(final String name);
 
     /**
-     * Sends a message to the cluster. Messages may include actions that this server is working on, or a lock attempt, or the server object to stay in the
-     * cluster club.
+     * Sends a message to the grid. Messages may include actions that this server is working on, or a lock attempt, or the server object to stay in the
+     * grid club.
      *
-     * @param serializable the object to send to the cluster
+     * @param serializable the object to send to the grid
      */
     void sendMessage(final Serializable serializable);
 
     /**
-     * This method will post a callable to the a member in the cluster. The result can be gotten from
+     * This method will post a callable to the a member in the grid. The result can be gotten from
      * the future that is returned. Keep in mind that on the remote node, there is no
      * dependency injection, so you have to get everything on that side when you get there.
      * <p>
      * This method will randomly select a node to execute the task on. Over time the tasks should be
-     * evenly distributed over the nodes in the cluster, essentially load balancing the stress over the cluster.
+     * evenly distributed over the nodes in the grid, essentially load balancing the stress over the grid.
      *
      * @param callable the callable that will be executed on a random target node
      * @return the future from the member that the callable will be executed on
@@ -69,15 +69,15 @@ public interface IClusterManager {
     <T> Future<T> sendTaskTo(final Object server, final Callable<T> callable);
 
     /**
-     * Similar to the above this method will execute a task on a target member of the cluster, except that
-     * this method will execute the same task on all nodes in the cluster. This can be useful when, for example
+     * Similar to the above this method will execute a task on a target member of the grid, except that
+     * this method will execute the same task on all nodes in the grid. This can be useful when, for example
      * when there are models being dynamically trained and all the servers need to stay in synch, so they all get
      * the updated analysis object to re-train from, and consequently persist the model to their local file system.
      *
-     * @param callable the callable that will be executed on the all nodes of the cluster
+     * @param callable the callable that will be executed on the all nodes of the grid
      * @return the futures from all the members that the callable is be executed on
      */
-    <T> List<Future<T>> sendTaskToAll(final Callable<T> callable);
+    <T> Future<T> sendTaskToAll(final Callable<T> callable);
 
     /**
      * Returns the object in the Ikube map with the specified key.
@@ -137,7 +137,7 @@ public interface IClusterManager {
 
 
     /**
-     * This method will release any resources and close down the cluster manager gracefully.
+     * This method will release any resources and close down the grid manager gracefully.
      */
     void destroy();
 

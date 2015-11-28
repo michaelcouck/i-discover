@@ -1,4 +1,4 @@
-package ikube.discover.cluster;
+package ikube.discover.grid;
 
 import ikube.discover.IConstants;
 import ikube.discover.listener.IConsumer;
@@ -30,13 +30,14 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * This is the GridGain implementation of the cluster manager.
+ * This is the GridGain implementation of the grid manager.
  *
  * @author Michael Couck
  * @version 01.00
- * @see ikube.discover.cluster.IClusterManager
+ * @see ikube.discover.grid.IClusterManager
  * @since 15-08-2014
  */
 @Service
@@ -112,12 +113,10 @@ public class ClusterManagerGridGain extends AClusterManager {
     <T> Future<T> wrapFuture(final GridFuture<?> gridFuture) {
         return (Future<T>) THREAD.submit(IConstants.GRID_NAME, new Runnable() {
             public void run() {
-                while (!gridFuture.isDone() && !gridFuture.isCancelled()) {
-                    try {
-                        gridFuture.get();
-                    } catch (final GridException e) {
-                        throw new RuntimeException(e);
-                    }
+                try {
+                    gridFuture.get();
+                } catch (final GridException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -148,19 +147,31 @@ public class ClusterManagerGridGain extends AClusterManager {
                 }
             }
         };
-        final GridNode gridNode = gridNodes.iterator().next();
+
+        AtomicReference<GridNode> gridNode = new AtomicReference<>();
+        outer:
+        for (final GridNode target : gridNodes) {
+            Collection<String> addresses = target.addresses();
+            for (final String address : addresses) {
+                if (server.equals(address)) {
+                    gridNode.set(target);
+                    break outer;
+                }
+            }
+        }
 
         GridComputeTask gridComputeTask = new GridComputeTask() {
 
+            @SuppressWarnings("UnusedDeclaration")
             @GridTaskContinuousMapperResource
             private GridComputeTaskContinuousMapper gridComputeTaskContinuousMapper;
 
             @Nullable
             @Override
             public Map<? extends GridComputeJob, GridNode> map(final List subgrid, @Nullable final Object arg) throws GridException {
-                gridComputeTaskContinuousMapper.send(gridComputeJob, gridNode);
-                Map<GridComputeJob, GridNode> gridNodeMap = new HashMap<GridComputeJob, GridNode>();
-                gridNodeMap.put(gridComputeJob, gridNode);
+                gridComputeTaskContinuousMapper.send(gridComputeJob, gridNode.get());
+                Map<GridComputeJob, GridNode> gridNodeMap = new HashMap<>();
+                gridNodeMap.put(gridComputeJob, gridNode.get());
                 return gridNodeMap;
             }
 
@@ -183,12 +194,10 @@ public class ClusterManagerGridGain extends AClusterManager {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<Future<T>> sendTaskToAll(final Callable<T> callable) {
+    public <T> Future<T> sendTaskToAll(final Callable<T> callable) {
         GridCompute gridCompute = grid.compute();
         GridFuture<T> gridFuture = (GridFuture<T>) gridCompute.broadcast(callable);
-        List<Future<T>> futures = new ArrayList<Future<T>>();
-        futures.add((Future<T>) wrapFuture(gridFuture));
-        return futures;
+        return wrapFuture(gridFuture);
     }
 
     /**
@@ -297,7 +306,7 @@ public class ClusterManagerGridGain extends AClusterManager {
         GridBiPredicate<UUID, Object> gridBiPredicate = new GridBiPredicate<UUID, Object>() {
             @Override
             public boolean apply(final UUID uuid, final Object o) {
-                logger.debug("Message : {}, object : {}", uuid , o);
+                logger.debug("Message : {}, object : {}", uuid, o);
                 listener.notify((IEvent<?, ?>) o);
                 return Boolean.TRUE;
             }

@@ -2,7 +2,7 @@ package ikube.discover.schedule;
 
 import ikube.discover.Context;
 import ikube.discover.IConstants;
-import ikube.discover.cluster.ClusterManagerGridGain;
+import ikube.discover.grid.ClusterManagerGridGain;
 import ikube.discover.listener.IEvent;
 import ikube.discover.listener.IProducer;
 import ikube.discover.listener.StartDatabaseProcessingEvent;
@@ -31,7 +31,7 @@ public class Scheduler implements IProducer<IEvent<?, ?>> {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired(required = false)
-    @Qualifier("ikube.cluster.gg.ClusterManagerGridGain")
+    @Qualifier("ikube.grid.gg.ClusterManagerGridGain")
     @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaAutowiredMembersInspection"})
     private ClusterManagerGridGain clusterManager;
 

@@ -1,7 +1,7 @@
 package ikube.discover.listener;
 
 import ikube.discover.IConstants;
-import ikube.discover.cluster.ClusterManagerGridGain;
+import ikube.discover.grid.ClusterManagerGridGain;
 import ikube.discover.tool.THREAD;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;

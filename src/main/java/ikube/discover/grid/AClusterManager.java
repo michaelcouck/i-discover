@@ -1,4 +1,4 @@
-package ikube.discover.cluster;
+package ikube.discover.grid;
 
 import ikube.discover.database.IDataBase;
 import org.slf4j.Logger;
@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * This base class for the cluster managers just has common methods and the ip and address that each cluster manager will use to distinguish
+ * This base class for the grid managers just has common methods and the ip and address that each grid manager will use to distinguish
  * the servers, added to the port.
  *
  * @author Michael Couck

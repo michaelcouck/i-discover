@@ -162,7 +162,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
     public void fire(final IndexWriterEvent event) {
         // TODO: Failover - only fire event and carry on if successful
         // TODO: Send this data batch to the node with the lowest cpu
-        logger.debug("Firing event in cluster : " + event);
+        logger.debug("Firing event in grid : " + event);
         listenerManager.fire(event, false);
     }
 
