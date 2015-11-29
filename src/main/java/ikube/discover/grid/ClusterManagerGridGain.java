@@ -14,7 +14,6 @@ import org.gridgain.grid.cache.datastructures.GridCacheDataStructures;
 import org.gridgain.grid.cache.datastructures.GridCacheQueue;
 import org.gridgain.grid.compute.*;
 import org.gridgain.grid.events.GridEvent;
-import org.gridgain.grid.events.GridEventType;
 import org.gridgain.grid.events.GridEvents;
 import org.gridgain.grid.lang.GridBiPredicate;
 import org.gridgain.grid.lang.GridPredicate;
@@ -111,13 +110,11 @@ public class ClusterManagerGridGain extends AClusterManager {
 
     @SuppressWarnings("unchecked")
     <T> Future<T> wrapFuture(final GridFuture<?> gridFuture) {
-        return (Future<T>) THREAD.submit(IConstants.GRID_NAME, new Runnable() {
-            public void run() {
-                try {
-                    gridFuture.get();
-                } catch (final GridException e) {
-                    throw new RuntimeException(e);
-                }
+        return (Future<T>) THREAD.submit(IConstants.GRID_NAME, () -> {
+            try {
+                gridFuture.get();
+            } catch (final GridException e) {
+                throw new RuntimeException(e);
             }
         });
     }
@@ -303,13 +300,10 @@ public class ClusterManagerGridGain extends AClusterManager {
      */
     public void addTopicListener(final String topic, final IConsumer<IEvent<?, ?>> listener) {
         GridMessaging gridMessaging = grid.message();
-        GridBiPredicate<UUID, Object> gridBiPredicate = new GridBiPredicate<UUID, Object>() {
-            @Override
-            public boolean apply(final UUID uuid, final Object o) {
-                logger.debug("Message : {}, object : {}", uuid, o);
-                listener.notify((IEvent<?, ?>) o);
-                return Boolean.TRUE;
-            }
+        GridBiPredicate<UUID, Object> gridBiPredicate = (uuid, o) -> {
+            logger.debug("Message : {}, object : {}", uuid, o);
+            listener.notify((IEvent<?, ?>) o);
+            return Boolean.TRUE;
         };
         try {
             gridMessaging.remoteListen(topic, gridBiPredicate).get();
@@ -320,21 +314,24 @@ public class ClusterManagerGridGain extends AClusterManager {
     }
 
     public void addQueueListener(final String queue, final IConsumer<IEvent<?, ?>> listener) {
-        GridPredicate<GridEvent> gridPredicate = new GridPredicate<GridEvent>() {
-            @Override
-            public boolean apply(final GridEvent gridEvent) {
-                logger.debug("Event : {}", gridEvent);
-                IEvent<?, ?> event = (IEvent<?, ?>) pop(queue);
-                listener.notify(event);
-                return Boolean.TRUE;
-            }
+        GridBiPredicate<UUID, GridEvent> gridBiPredicate = (uuid, gridEvent) -> {
+            logger.debug("Event : {}", gridEvent);
+            IEvent<?, ?> event = (IEvent<?, ?>) pop(queue);
+            listener.notify(event);
+            return Boolean.TRUE;
+        };
+        GridPredicate<GridEvent> gridPredicate = o -> {
+            logger.debug("Event : {}", o);
+            IEvent<?, ?> event = (IEvent<?, ?>) pop(queue);
+            listener.notify(event);
+            return Boolean.TRUE;
         };
         GridEvents gridEvents = grid.forCache(queue).events();
-        // We only listen locally, the result is that we only execute the logic on the machine that is
-        // closest to the data, i.e. the queue entry is on this machine. And we distribute the data on the
-        // queue according to the smallest size, i.e. put the next queue entry on the machine that has the lowest
-        // queue depth
-        gridEvents.localListen(gridPredicate, GridEventType.EVT_CACHE_OBJECT_PUT);
+        try {
+            gridEvents.remoteListen(gridBiPredicate, gridPredicate).get();
+        } catch (final GridException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void push(final String queue, final Object object) {

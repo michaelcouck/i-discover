@@ -2,13 +2,19 @@ package ikube.discover.grid;
 
 import ikube.discover.AbstractTest;
 import ikube.discover.IConstants;
+import ikube.discover.listener.IConsumer;
 import ikube.discover.tool.THREAD;
 import ikube.discover.tool.URI;
 import mockit.MockUp;
 import org.gridgain.grid.*;
 import org.gridgain.grid.cache.GridCache;
+import org.gridgain.grid.cache.datastructures.GridCacheDataStructures;
+import org.gridgain.grid.cache.datastructures.GridCacheQueue;
 import org.gridgain.grid.compute.GridCompute;
 import org.gridgain.grid.compute.GridComputeTask;
+import org.gridgain.grid.events.GridEvents;
+import org.gridgain.grid.lang.GridBiPredicate;
+import org.gridgain.grid.lang.GridPredicate;
 import org.gridgain.grid.messaging.GridMessaging;
 import org.jetbrains.annotations.Nullable;
 import org.junit.AfterClass;
@@ -17,7 +23,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 
 import java.util.Arrays;
@@ -34,14 +39,19 @@ import static org.mockito.Mockito.*;
  * @version 01.00
  * @since 15-08-2014
  */
+@SuppressWarnings("unchecked")
 public class ClusterManagerGridGainTest extends AbstractTest {
 
+    @SuppressWarnings("UnusedDeclaration")
     static class GridGainMockUp extends MockUp<GridGain> {
         @mockit.Mock
         public static Grid grid(@Nullable String name) throws GridIllegalStateException {
-            return Mockito.mock(Grid.class);
+            return mock(Grid.class);
         }
     }
+
+    String key = "key";
+    String value = "value";
 
     @Mock
     private Grid grid;
@@ -120,7 +130,6 @@ public class ClusterManagerGridGainTest extends AbstractTest {
         when(grid.nodes()).thenReturn(Arrays.asList(gridNode));
         when(gridNode.addresses()).thenReturn(Arrays.asList(URI.getIp()));
         clusterManager.sendTaskTo(URI.getIp(), callable);
-        //noinspection unchecked
         verify(gridCompute, times(1)).execute(any(GridComputeTask.class), any(null));
     }
 
@@ -134,9 +143,6 @@ public class ClusterManagerGridGainTest extends AbstractTest {
 
     @Test
     public void get() throws GridException {
-        String key = "key";
-        String value = "value";
-        //noinspection unchecked
         when(gridCache.get(key)).thenReturn(value);
         Object gridValue = clusterManager.get(key);
         assertEquals(value, gridValue);
@@ -144,47 +150,92 @@ public class ClusterManagerGridGainTest extends AbstractTest {
 
     @Test
     public void put() throws GridException {
-        String key = "key";
-        String value = "value";
         clusterManager.put(key, value);
-        //noinspection unchecked
         verify(gridCache, times(1)).put(key, value);
     }
 
     @Test
-    public void remove() {
-        clusterManager.remove(null);
-        fail();
+    public void remove() throws GridException {
+        clusterManager.remove(key);
+        verify(gridCache, times(1)).remove(any(Object.class), any(Object.class));
     }
 
     @Test
-    public void clear() {
-        clusterManager.clear(null);
-        fail();
+    public void clear() throws GridException {
+        clusterManager.clear(IConstants.GRID_NAME);
+        verify(gridCache, times(1)).removeAll();
     }
 
     @Test
-    public void getMap() {
-        clusterManager.get(null, null);
-        fail();
+    public void getMap() throws GridException {
+        clusterManager.get(IConstants.GRID_NAME, key);
+        verify(gridCache, times(1)).get(key);
     }
 
     @Test
-    public void putMap() {
-        clusterManager.put(null, null, null);
-        fail();
+    public void putMap() throws GridException {
+        clusterManager.put(IConstants.GRID_NAME, key, value);
+        verify(gridCache, times(1)).put(key, value);
     }
 
     @Test
-    public void removeMap() {
-        clusterManager.remove(null, null);
-        fail();
+    public void removeMap() throws GridException {
+        clusterManager.remove(IConstants.GRID_NAME, key);
+        verify(gridCache, times(1)).remove(any(Object.class), any(Object.class));
     }
 
     @Test
-    public void destroy() {
+    public void addTopicListener() throws GridException {
+        IConsumer consumer = mock(IConsumer.class);
+        when(grid.message()).thenReturn(gridMessaging);
+        when(gridMessaging.remoteListen(any(String.class), any(GridBiPredicate.class))).thenReturn(gridFuture);
+        clusterManager.addTopicListener(IConstants.GRID_NAME, consumer);
+        verify(gridFuture, times(1)).get();
+    }
+
+    @Test
+    public void addQueueListener() throws GridException {
+        IConsumer consumer = mock(IConsumer.class);
+        GridProjection gridProjection = mock(GridProjection.class);
+        GridEvents gridEvents = mock(GridEvents.class);
+        when(grid.forCache(IConstants.GRID_NAME)).thenReturn(gridProjection);
+        when(gridProjection.events()).thenReturn(gridEvents);
+        when(gridEvents.remoteListen(any(GridBiPredicate.class), any(GridPredicate.class))).thenReturn(gridFuture);
+        clusterManager.addQueueListener(IConstants.GRID_NAME, consumer);
+        verify(gridFuture, times(1)).get();
+    }
+
+    @Test
+    public void push() throws GridException {
+        GridCacheDataStructures gridCacheDataStructures = mock(GridCacheDataStructures.class);
+        GridCacheQueue<Object> gridQueue = mock(GridCacheQueue.class);
+        when(gridCache.dataStructures()).thenReturn(gridCacheDataStructures);
+        when(gridCacheDataStructures.queue(any(String.class), anyInt(), anyBoolean(), anyBoolean())).thenReturn(gridQueue);
+        clusterManager.push(IConstants.GRID_NAME, value);
+        verify(gridQueue, times(1)).put(value);
+    }
+
+    @Test
+    public void pop() throws GridException {
+        GridCacheDataStructures gridCacheDataStructures = mock(GridCacheDataStructures.class);
+        GridCacheQueue<Object> gridQueue = mock(GridCacheQueue.class);
+        when(gridCache.dataStructures()).thenReturn(gridCacheDataStructures);
+        when(gridCacheDataStructures.queue(any(String.class), anyInt(), anyBoolean(), anyBoolean())).thenReturn(gridQueue);
+        clusterManager.pop(IConstants.GRID_NAME);
+        verify(gridQueue, times(1)).take();
+    }
+
+    @Test
+    public void send() throws GridException {
+        when(grid.message()).thenReturn(gridMessaging);
+        clusterManager.send(IConstants.GRID_NAME, value);
+        verify(gridMessaging, times(1)).send(IConstants.GRID_NAME, value);
+    }
+
+    @Test
+    public void destroy() throws GridException {
         clusterManager.destroy();
-        fail();
+        verify(grid, times(1)).close();
     }
 
 }
