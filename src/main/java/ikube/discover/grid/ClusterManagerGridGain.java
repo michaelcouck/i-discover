@@ -110,11 +110,14 @@ public class ClusterManagerGridGain extends AClusterManager {
 
     @SuppressWarnings("unchecked")
     <T> Future<T> wrapFuture(final GridFuture<?> gridFuture) {
-        return (Future<T>) THREAD.submit(IConstants.GRID_NAME, () -> {
-            try {
-                gridFuture.get();
-            } catch (final GridException e) {
-                throw new RuntimeException(e);
+        return (Future<T>) THREAD.submit(IConstants.GRID_NAME, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    gridFuture.get();
+                } catch (final GridException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
@@ -300,10 +303,13 @@ public class ClusterManagerGridGain extends AClusterManager {
      */
     public void addTopicListener(final String topic, final IConsumer<IEvent<?, ?>> listener) {
         GridMessaging gridMessaging = grid.message();
-        GridBiPredicate<UUID, Object> gridBiPredicate = (uuid, o) -> {
-            logger.debug("Message : {}, object : {}", uuid, o);
-            listener.notify((IEvent<?, ?>) o);
-            return Boolean.TRUE;
+        GridBiPredicate<UUID, Object> gridBiPredicate = new GridBiPredicate<UUID, Object>() {
+            @Override
+            public boolean apply(final UUID uuid, final Object o) {
+                logger.debug("Message : {}, object : {}", uuid, o);
+                listener.notify((IEvent<?, ?>) o);
+                return Boolean.TRUE;
+            }
         };
         try {
             gridMessaging.remoteListen(topic, gridBiPredicate).get();
@@ -314,17 +320,23 @@ public class ClusterManagerGridGain extends AClusterManager {
     }
 
     public void addQueueListener(final String queue, final IConsumer<IEvent<?, ?>> listener) {
-        GridBiPredicate<UUID, GridEvent> gridBiPredicate = (uuid, gridEvent) -> {
-            logger.debug("Event : {}", gridEvent);
-            IEvent<?, ?> event = (IEvent<?, ?>) pop(queue);
-            listener.notify(event);
-            return Boolean.TRUE;
+        GridBiPredicate<UUID, GridEvent> gridBiPredicate = new GridBiPredicate<UUID, GridEvent>() {
+            @Override
+            public boolean apply(final UUID uuid, final GridEvent gridEvent) {
+                logger.debug("Event : {}", gridEvent);
+                IEvent<?, ?> event = (IEvent<?, ?>) pop(queue);
+                listener.notify(event);
+                return Boolean.TRUE;
+            }
         };
-        GridPredicate<GridEvent> gridPredicate = o -> {
-            logger.debug("Event : {}", o);
-            IEvent<?, ?> event = (IEvent<?, ?>) pop(queue);
-            listener.notify(event);
-            return Boolean.TRUE;
+        GridPredicate<GridEvent> gridPredicate = new GridPredicate<GridEvent>() {
+            @Override
+            public boolean apply(final GridEvent gridEvent) {
+                logger.debug("Event : {}", gridEvent);
+                IEvent<?, ?> event = (IEvent<?, ?>) pop(queue);
+                listener.notify(event);
+                return Boolean.TRUE;
+            }
         };
         GridEvents gridEvents = grid.forCache(queue).events();
         try {
