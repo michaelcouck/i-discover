@@ -4,6 +4,7 @@ import ikube.discover.database.IDataBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * This base class for the grid managers just has common methods and the ip and address that each grid manager will use to distinguish
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @version 01.00
  * @since 17.07.12
  */
-@SuppressWarnings("SpringJavaAutowiringInspection")
 public abstract class AClusterManager implements IClusterManager {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -28,6 +28,7 @@ public abstract class AClusterManager implements IClusterManager {
     protected String address;
 
     @Autowired
+    @Qualifier("ikube.discover.database.IDataBase")
     protected IDataBase dataBase;
 
 }

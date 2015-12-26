@@ -40,9 +40,9 @@
         init-method="initialize"
         property:fileNamePattern="spring.properties"/>
 
+    <context:annotation-config/>
     <context:spring-configured />
     <context:component-scan base-package="ikube" />
-    <context:annotation-config/>
     <transaction:annotation-driven transaction-manager="transactionManager"/>
 
     <import resource="spring-h2-jdbc.xml"/>
@@ -99,58 +99,6 @@
     </transaction:advice>
 
     <util:map id="jpaPropertyMap">
-        <!--<property name="javax.persistence.jdbc.user" value="sa"/>-->
-        <!--<property name="javax.persistence.jdbc.password" value=""/>-->
-        <!--<property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>-->
-        <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:file:i-discover"/>-->
-        <!--<entry key="eclipselink.ddl-generation" value="create-tables"/>-->
-        <!--<entry key="eclipselink.logging.level.sql" value="FINEST"/>-->
-        <!--<entry key="eclipselink.logging.parameters" value="true"/>-->
-        <!--<entry key="eclipselink.ddl-generation.output-mode" value="both"/>-->
-
-        <!-- <entry key="openjpa.ConnectionFactoryProperties" value="PrettyPrint=true,PrettyPrintLineLength=150" /> -->
-        <!--<entry key="openjpa.Log" value="DefaultLevel=TRACE,JDBC=TRACE,SQL=TRACE,File=openjpa.log,Runtime=TRACE,Tool=TRACE"/>-->
-        <!--<entry key="openjpa.ConnectionFactoryProperties" value="PrintParameters=true" />-->
-
-        <!--<entry key="openjpa.DataCache" value="true(CacheSize=0,SoftReferenceSize=0)"/>-->
-        <!--<entry key="openjpa.QueryCache" value="true(CacheSize=0,SoftReferenceSize=0)"/>-->
-
-        <!--<entry key="openjpa.Optimistic" value="true"/>-->
-        <!--<entry key="openjpa.ReadLockLevel" value="none"/>-->
-        <!--<entry key="openjpa.WriteLockLevel" value="write"/>-->
-        <!--<entry key="openjpa.NontransactionalRead" value="true"/>-->
-        <!--<entry key="openjpa.LockTimeout" value="60000"/>-->
-
-        <!--<entry key="openjpa.Multithreaded" value="true"/>-->
-        <!--<entry key="openjpa.AutoDetach" value="commit"/>-->
-        <!--<entry key="openjpa.FlushBeforeQueries" value="true"/> &lt;!&ndash; Dangerous, should be false &ndash;&gt;-->
-        <!--<entry key="openjpa.DynamicEnhancementAgent" value="false"/>-->
-        <!--<entry key="openjpa.RuntimeUnenhancedClasses" value="unsupported"/>-->
-        <!--<entry key="openjpa.jdbc.DBDictionary" value="${idiscover.jdbc.dictionary}"/>-->
-        <!--<entry key="openjpa.MetaDataFactory" value="jpa(Types=ikube.discover.database.model.Persistable;ikube.discover.database.model.Analysis)"/>-->
-        <!--<entry key="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>-->
-
-        <!--
-            There is a bug somewhere, in OpenJpa or H2 but the 'FOR UPDATE LIMIT ?'
-             seems to be rejected by H2, and incidentally for MySql too. Perhaps the others
-             accept this syntax.
-        -->
-        <!-- (VersionCheckOnReadLock=false,VersionUpdateOnWriteLock=false) -->
-        <!--<entry key="openjpa.LockManager" value="pessimistic"/>-->
-
-        <!--<entry key="openjpa.Connection2UserName" value="${idiscover.jdbc.userid}"/>-->
-        <!--<entry key="openjpa.Connection2Password" value="${idiscover.jdbc.password}"/>-->
-        <!--<entry key="openjpa.Connection2URL" value="${idiscover.jdbc.url}"/>-->
-        <!--<entry key="openjpa.Connection2DriverName" value="${idiscover.jdbc.driver}"/>-->
-
-        <!--<entry key="openjpa.ConnectionUserName" value="${idiscover.jdbc.userid}"/>-->
-        <!--<entry key="openjpa.ConnectionPassword" value="${idiscover.jdbc.password}"/>-->
-        <!--<entry key="openjpa.ConnectionURL" value="${idiscover.jdbc.url}"/>-->
-        <!--<entry key="openjpa.ConnectionDriverName" value="${idiscover.jdbc.driver}"/>-->
-
-        <!-- ,Indexes=true,SchemaAction='drop,add',SchemaAction='add,deleteTableContents' -->
-        <!--<entry key="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>-->
-        <!--<entry key="openjpa.InverseManager" value="true(Action=warn)"/>-->
     </util:map>
 
     <bean

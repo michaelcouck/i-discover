@@ -3,24 +3,24 @@ package ikube.discover.write;
 import ikube.discover.Context;
 import ikube.discover.IConstants;
 import ikube.discover.listener.*;
-import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import ikube.discover.tool.INDEX;
+import ikube.discover.tool.PARSER;
+import ikube.discover.tool.STRING;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.*;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * This class writes documents to the indexes, some in memory, and some on the disk.
@@ -32,21 +32,24 @@ import java.util.Map;
 @Component
 public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWriterEvent> {
 
+    private static final long MAX_DOCUMENTS = 1000000;
+    private static final long UNCOMMITTED_DOCUMENTS_BEFORE_COMMIT = 1000;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Qualifier("ikube.discover.listener.ListenerManager")
     private ListenerManager listenerManager;
 
     private IndexWriter indexWriter;
+    private AtomicLong uncommittedDocuments;
 
     public Writer() throws IOException {
-        Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_48);
-        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_48, analyzer);
-        indexWriterConfig.setRAMBufferSizeMB(512);
-        indexWriterConfig.setMaxBufferedDocs(10000);
-        indexWriter = new IndexWriter(new RAMDirectory(), indexWriterConfig);
+        uncommittedDocuments = new AtomicLong();
+        createIndexWriter();
+    }
+
+    private synchronized void createIndexWriter() throws IOException {
+        indexWriter = INDEX.getIndexWriter();
     }
 
     @Override
@@ -58,24 +61,33 @@ public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWrite
         List<Document> documents = writerEvent.getDocuments();
         if (documents != null) {
             writeToIndex(documents);
+            uncommittedDocuments.getAndAccumulate(documents.size(), (left, right) -> left + right);
         }
-        synchronized (this) {
-            if (indexWriter.hasUncommittedChanges()) {
+        if (uncommittedDocuments.get() > UNCOMMITTED_DOCUMENTS_BEFORE_COMMIT) {
+            synchronized (this) {
+                uncommittedDocuments.set(0);
+                INDEX.commitMerge(indexWriter);
+                logger.info("Num docs writer : {}", indexWriter.numDocs());
+
                 try {
-                    indexWriter.commit();
-                    indexWriter.forceMerge(5);
-                    indexWriter.waitForMerges();
-                    logger.debug("Num docs writer : {}", indexWriter.numDocs());
-                    // Fire JVM internal event for searcher to open on new directories
-                    Context context = writerEvent.getContext();
-                    Directory[] directories = new Directory[]{indexWriter.getDirectory()};
-                    IEvent<?, ?> searcherEvent = new OpenSearcherEvent(context, directories);
-                    listenerManager.fire(searcherEvent, true);
-                } catch (final IOException e) {
-                    throw new RuntimeException(e);
+                    if (indexWriter.numDocs() > MAX_DOCUMENTS) {
+                        try {
+                            logger.info("Getting new index writer : {}", indexWriter.numDocs());
+                            indexWriter = INDEX.getIndexWriter();
+                        } catch (final IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                } finally {
+                    notifyAll();
                 }
+
+                // Fire JVM internal event for searcher to open on new directories
+                Context context = writerEvent.getContext();
+                Directory[] directories = new Directory[]{indexWriter.getDirectory()};
+                IEvent<?, ?> searcherEvent = new OpenSearcherEvent(context, directories);
+                listenerManager.fire(searcherEvent, true);
             }
-            notifyAll();
         }
     }
 
@@ -99,7 +111,6 @@ public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWrite
     public void writeToIndex(final List<Document> documents) {
         for (final Document document : documents) {
             try {
-                // TODO: Delete the document by the id first! Only if it exists I guess.
                 logger.debug("Writing document : {}", document.get(IConstants.ID));
                 indexWriter.addDocument(document);
             } catch (final IOException e) {
@@ -109,51 +120,22 @@ public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWrite
     }
 
     public List<Document> createDocuments(final List<Map<Object, Object>> records) {
-        // TODO: Parse the data before creating documents for Lucene
-        List<Document> documents = new ArrayList<Document>();
+        List<Document> documents = new ArrayList<>();
         for (final Map<Object, Object> row : records) {
             Document document = new Document();
             for (final Map.Entry<Object, Object> mapEntry : row.entrySet()) {
                 String fieldName = mapEntry.getKey().toString();
                 String fieldValue = mapEntry.getValue() != null ? mapEntry.getValue().toString() : "";
-                if (StringUtils.isNumeric(fieldValue)) {
-                    // IndexManager.addNumericField(fieldName, fieldValue, document, true, 0);
-                    // TODO: Add numeric field...
+                String parsedFieldValue = PARSER.parse(new ByteArrayInputStream(fieldValue.getBytes()));
+                if (STRING.isNumeric(parsedFieldValue)) {
+                    INDEX.addNumericField(fieldName, parsedFieldValue, true, 0, document);
                 } else {
-                    // IndexManager.addStringField(document, fieldName, fieldValue, true, true, true, false, true, 0);
-                    // TODO: Add string field...
+                    INDEX.addStringField(fieldName, parsedFieldValue, true, true, true, false, true, 0, document);
                 }
             }
             documents.add(document);
         }
         return documents;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    protected void printIndex(final int numDocs) {
-        IndexReader indexReader;
-        try {
-            indexReader = DirectoryReader.open(indexWriter.getDirectory());
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-        logger.error("Num docs : " + indexReader.numDocs());
-        for (int i = 0; i < numDocs && i < indexReader.numDocs(); i++) {
-            try {
-                Document document = indexReader.document(i);
-                logger.error("Document : " + i + ", " + document.toString().length());
-                printDocument(document);
-            } catch (final IOException e) {
-                logger.error(null, e);
-            }
-        }
-    }
-
-    protected void printDocument(final Document document) {
-        List<IndexableField> fields = document.getFields();
-        for (IndexableField indexableField : fields) {
-            logger.error("        : {}", indexableField);
-        }
     }
 
 }

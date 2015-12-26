@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ import java.util.Map;
  * @version 01.00
  * @since 17-08-2015
  */
-@Service
 @Component
 @EnableAsync
 @Configuration
@@ -31,13 +29,12 @@ public class ListenerManager {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired(required = true)
+    @Autowired
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Qualifier("ikube.discover.listener.ListenerManager.listeners")
-    private Map<String, Map<String, List<IConsumer<IEvent<?, ?>>>>> listeners = new HashMap<String, Map<String,
-            List<IConsumer<IEvent<?, ?>>>>>();
+    private Map<String, Map<String, List<IConsumer<IEvent<?, ?>>>>> listeners = new HashMap<>();
 
-    @Autowired(required = true)
+    @Autowired
     @Qualifier("ikube.discover.cluster.IClusterManager")
     @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaAutowiredMembersInspection"})
     private ClusterManagerGridGain clusterManager;
@@ -57,12 +54,12 @@ public class ListenerManager {
     List<IConsumer<IEvent<?, ?>>> get(final String type, final String name) {
         Map<String, List<IConsumer<IEvent<?, ?>>>> listenersForType = listeners.get(type);
         if (listenersForType == null) {
-            listenersForType = new HashMap<String, List<IConsumer<IEvent<?, ?>>>>();
+            listenersForType = new HashMap<>();
             listeners.put(type, listenersForType);
         }
         List<IConsumer<IEvent<?, ?>>> listenersForName = listenersForType.get(name);
         if (listenersForName == null) {
-            listenersForName = new ArrayList<IConsumer<IEvent<?, ?>>>();
+            listenersForName = new ArrayList<>();
             listenersForType.put(name, listenersForName);
         }
         return listenersForName;
@@ -100,28 +97,25 @@ public class ListenerManager {
     }
 
     public void addGridListeners() {
-        addTopicListener();
-        addQueueListener();
+        THREAD.submit("wait-for-cluster-manager", () -> {
+            THREAD.sleep(15000);
+            addTopicListener();
+            addQueueListener();
+        });
     }
 
     public void addTopicListener() {
-        clusterManager.addTopicListener(IConstants.GRID_NAME, new IConsumer<IEvent<?, ?>>() {
-            @Override
-            public void notify(final IEvent<?, ?> event) {
-                fire(event, true);
-            }
-        });
-        logger.info("Added topic listener : ");
+        if (clusterManager != null) {
+            clusterManager.addTopicListener(IConstants.GRID_NAME, event -> fire(event, true));
+            logger.info("Added topic listener : ");
+        }
     }
 
     public void addQueueListener() {
-        clusterManager.addQueueListener(IConstants.GRID_NAME, new IConsumer<IEvent<?, ?>>() {
-            @Override
-            public void notify(final IEvent<?, ?> event) {
-                fire(event, true);
-            }
-        });
-        logger.info("Added queue listener : ");
+        if (clusterManager != null) {
+            clusterManager.addQueueListener(IConstants.GRID_NAME, event -> fire(event, true));
+            logger.info("Added queue listener : ");
+        }
     }
 
     public void setListeners(final Map<String, Map<String, List<IConsumer<IEvent<?, ?>>>>> listeners) {

@@ -10,10 +10,8 @@ import ikube.discover.listener.SystemMonitoringEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -24,23 +22,20 @@ import java.util.List;
  * @version 01.00
  * @since 09-07-2015
  */
-@Component
 @EnableScheduling
 public class Scheduler implements IProducer<IEvent<?, ?>> {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired(required = false)
-    @Qualifier("ikube.grid.gg.ClusterManagerGridGain")
-    @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaAutowiredMembersInspection"})
-    private ClusterManagerGridGain clusterManager;
+    @Autowired
+    private List<Context> contexts;
 
     @Autowired
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private List<Context> contexts;
+    private ClusterManagerGridGain clusterManager;
 
     @Override
     public void fire(final IEvent<?, ?> event) {
+        logger.debug("Scheduler : " + this + ", " + clusterManager);
         clusterManager.send(IConstants.GRID_NAME, event);
     }
 

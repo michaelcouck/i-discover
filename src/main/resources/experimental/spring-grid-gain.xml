@@ -3,45 +3,57 @@
 <beans
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
     xmlns:property="http://www.springframework.org/schema/p"
     xmlns:util="http://www.springframework.org/schema/util"
 
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/util
-            http://www.springframework.org/schema/util/spring-util.xsd">
+        http://www.springframework.org/schema/util/spring-util.xsd">
 
     <description>This is the configuration for the Grid Gain grid</description>
 
+    <context:annotation-config/>
+    <context:spring-configured />
+    <context:component-scan base-package="ikube" />
+
+    <!-- Configuration for the grid -->
     <bean
         id="org.gridgain.grid.GridConfiguration"
-        class="org.gridgain.grid.GridConfiguration">
-        <property name="discoverySpi">
-            <bean class="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi">
-                <property name="ipFinder">
-                    <bean
-                        class="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder">
-                        <property name="multicastGroup" value="224.0.0.1"/>
-                    </bean>
-                </property>
-            </bean>
-        </property>
+        class="org.gridgain.grid.GridConfiguration"
+        lazy-init="false"
+        property:discoverySpi-ref="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"/>
+    <bean
+        id="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
+        class="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
+        property:ipFinder-ref="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder" />
+    <bean
+        id="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder"
+        class="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder">
+        <property name="multicastGroup" value="224.0.0.1"/>
     </bean>
 
+    <!-- The grid -->
     <bean
         id="org.gridgain.grid.Grid"
-        class="org.gridgain.grid.GridSpringBean">
-        <property name="configuration" ref="org.gridgain.grid.GridConfiguration" />
-    </bean>
+        class="org.gridgain.grid.GridSpringBean"
+        lazy-init="false"
+        depends-on="org.gridgain.grid.GridConfiguration"
+        property:configuration-ref="org.gridgain.grid.GridConfiguration" />
 
+    <!-- Cluster manager -->
     <bean
         id="ikube.discover.cluster.IClusterManager"
         class="ikube.discover.grid.ClusterManagerGridGain"
         lazy-init="false"
         init-method="initialize"
         destroy-method="destroy"
-        depends-on="org.gridgain.grid.GridConfiguration" />
+        depends-on="org.gridgain.grid.Grid"
+        property:grid-ref="org.gridgain.grid.Grid"/>
 
     <!--
         And here we register the actors/listeners/observers to listen to specific events in the grid. The
