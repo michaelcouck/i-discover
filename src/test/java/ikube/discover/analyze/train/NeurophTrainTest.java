@@ -14,6 +14,7 @@ public class NeurophTrainTest extends AbstractTest {
     @Test
     public void train() throws IOException {
         neurophTrain.train();
+        neurophTrain.trainMinst();
     }
 
 }
