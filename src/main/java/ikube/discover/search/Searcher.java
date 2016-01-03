@@ -10,7 +10,6 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import java.util.List;
  * @version 01.00
  * @since 09-07-2015
  */
-@Component
 public class Searcher implements IConsumer<OpenSearcherEvent> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -12,11 +12,9 @@ import javax.ws.rs.core.Response;
  * @version 01.00
  * @since 20-11-2012
  */
-@SuppressWarnings("SpringJavaAutowiringInspection")
 public abstract class ResourceApi {
 
     public static final String REQUEST = "request";
-    private static final String SEPARATOR = "|";
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 

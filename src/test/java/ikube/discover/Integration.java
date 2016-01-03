@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -31,7 +32,6 @@ import java.util.Random;
 @Configurable
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"file:src/main/resources/experimental/spring.xml"})
-@SuppressWarnings({"SpringJavaAutowiringInspection", "SpringContextConfigurationInspection"})
 public class Integration {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -40,7 +40,9 @@ public class Integration {
 
     @Autowired
     private Searcher searcher;
+
     @Autowired
+    @Qualifier("ikube.discover.database.IDataBase")
     private IDataBase dataBase;
 
     @Before
@@ -91,7 +93,7 @@ public class Integration {
                 do {
                     int insertsPerSecond = random.nextInt(100);
                     long start = System.currentTimeMillis();
-                    ArrayList<Analysis> rules = new ArrayList<Analysis>();
+                    ArrayList<Analysis> rules = new ArrayList<>();
                     for (int i = 0; i < insertsPerSecond; i++) {
                         Analysis rule = new Analysis();
                         rule.setAction("action");
@@ -102,7 +104,7 @@ public class Integration {
                         rules.add(rule);
                     }
 
-                    logger.error("Persisting batch {}", rules.size());
+                    logger.debug("Persisting batch {}", rules.size());
                     dataBase.persistBatch(rules);
 
                     count = dataBase.count(Analysis.class);

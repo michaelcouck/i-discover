@@ -96,7 +96,7 @@ public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWrite
         listenerManager.fire(event, false);
     }
 
-    public List<Map<Object, Object>> process(final Context context, final List<Map<Object, Object>> data) {
+    List<Map<Object, Object>> process(final Context context, final List<Map<Object, Object>> data) {
         // Create the Lucene documents from the changed records
         List<Document> documents = createDocuments(data);
         if (documents.size() > 0) {
@@ -108,7 +108,7 @@ public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWrite
         return data;
     }
 
-    public void writeToIndex(final List<Document> documents) {
+    void writeToIndex(final List<Document> documents) {
         for (final Document document : documents) {
             try {
                 logger.debug("Writing document : {}", document.get(IConstants.ID));
@@ -119,7 +119,7 @@ public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWrite
         }
     }
 
-    public List<Document> createDocuments(final List<Map<Object, Object>> records) {
+    List<Document> createDocuments(final List<Map<Object, Object>> records) {
         List<Document> documents = new ArrayList<>();
         for (final Map<Object, Object> row : records) {
             Document document = new Document();

@@ -26,7 +26,9 @@
         id="org.gridgain.grid.GridConfiguration"
         class="org.gridgain.grid.GridConfiguration"
         lazy-init="false"
-        property:discoverySpi-ref="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"/>
+        property:discoverySpi-ref="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
+        property:restEnabled="false"
+        property:restTcpPort="8090"/>
     <bean
         id="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
         class="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
@@ -102,6 +104,10 @@
     <util:list id="search-context-database-listeners">
         <ref bean="ikube.discover.connect.DatabaseConnector"/>
     </util:list>
+
+    <util:map id="searchers">
+        <entry key="searchers" value-ref="ikube.discover.search.Searcher" />
+    </util:map>
 
     <!-- These are the actors/listeners/observers that will act on the events published to the grid -->
     <bean
