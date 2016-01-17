@@ -1,10 +1,10 @@
 package ikube.discover.analyze.train;
 
-public class Nd4jTain implements ITrain {
+public class Nd4jTain implements ITrain<Boolean> {
 
     @Override
     @SuppressWarnings("ConstantConditions")
-    public boolean train() {
+    public Boolean train() {
         return false;
     }
 }

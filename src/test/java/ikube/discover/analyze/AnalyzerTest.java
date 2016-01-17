@@ -1,7 +1,9 @@
 package ikube.discover.analyze;
 
 /**
- * Created by laptop on 03.01.16.
+ * @author Michael Couck
+ * @version 01.00
+ * @since 24-08-2015
  */
 public class AnalyzerTest {
 }

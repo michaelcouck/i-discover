@@ -1,6 +1,7 @@
 package ikube.discover.analyze.train;
 
 import org.neuroph.contrib.model.errorestimation.CrossValidation;
+import org.neuroph.core.Layer;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.events.LearningEvent;
 import org.neuroph.core.events.LearningEventListener;
@@ -11,13 +12,18 @@ import org.neuroph.nnet.comp.layer.FeatureMapsLayer;
 import org.neuroph.nnet.comp.layer.Layer2D;
 import org.neuroph.nnet.learning.BackPropagation;
 import org.neuroph.nnet.learning.MomentumBackpropagation;
-import org.neuroph.samples.convolution.mnist.MNISTDataSet;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class NeurophTrain implements ITrain {
+/**
+ * TODO: JavaDoc
+ *
+ * @author Michael Couck
+ * @version 01.00
+ * @since 01-01-2016
+ */
+public class NeurophTrain implements ITrain<Layer[]> {
 
     class LearningListener implements LearningEventListener {
 
@@ -32,21 +38,16 @@ public class NeurophTrain implements ITrain {
         }
     }
 
-    @Override
-    public boolean train() throws IOException {
-        return Boolean.TRUE;
+    private DataSet trainingDataSet;
+    private DataSet crossValidationDataSet;
+
+    NeurophTrain(final DataSet trainingDataSet, final DataSet crossValidationDataSet) {
+        this.trainingDataSet = trainingDataSet;
+        this.crossValidationDataSet = crossValidationDataSet;
     }
 
-    public boolean trainMinst() throws IOException {
-        if (new File("mnist.nnet").exists()) {
-            System.out.println("Convolutional network already created and trained : ");
-            return Boolean.TRUE;
-        }
-        DataSet trainSet = MNISTDataSet.createFromFile("src/main/resources/data_sets/train-labels.idx1-ubyte",
-                "src/main/resources/data_sets/train-images.idx3-ubyte", '\uea60');
-        DataSet testSet = MNISTDataSet.createFromFile("src/main/resources/data_sets/t10k-labels.idx1-ubyte",
-                "src/main/resources/data_sets/t10k-images.idx3-ubyte", 10000);
-
+    @Override
+    public Layer[] train() throws IOException {
         Layer2D.Dimensions inputDimension = new Layer2D.Dimensions(32, 32);
         Kernel convolutionKernel = new Kernel(5, 5);
         Kernel poolingKernel = new Kernel(2, 2);
@@ -69,19 +70,19 @@ public class NeurophTrain implements ITrain {
         convolutionNetwork.setLearningRule(backPropagation);
 
         System.out.println("Started training...");
-        convolutionNetwork.learn(trainSet);
+        convolutionNetwork.learn(trainingDataSet);
         System.out.println("Done training!");
 
-        CrossValidation crossValidation = new CrossValidation(convolutionNetwork, testSet, 6);
+        CrossValidation crossValidation = new CrossValidation(convolutionNetwork, crossValidationDataSet, 6);
         crossValidation.run();
-        convolutionNetwork.save("/mnist.nnet");
+        // convolutionNetwork.save("/mnist.nnet");
 
-        convolutionNetwork.setInput(testSet.getRowAt(0).getInput());
+        convolutionNetwork.setInput(crossValidationDataSet.getRowAt(0).getInput());
         convolutionNetwork.calculate();
         double[] output = convolutionNetwork.getOutput();
         System.out.println("Output : " + Arrays.toString(output));
 
-        return Boolean.TRUE;
+        return convolutionNetwork.getLayers();
     }
 
     public boolean trainSimple() {

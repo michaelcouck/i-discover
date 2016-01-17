@@ -13,10 +13,9 @@ import org.slf4j.LoggerFactory;
  * @version 01.00
  * @since 24-08-2015
  */
-// @Component
+@SuppressWarnings("UnusedDeclaration")
 public class Analyzer implements IConsumer<AnalysisEvent>, IProducer<AnalysisEvent> {
 
-    @SuppressWarnings("UnusedDeclaration")
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override

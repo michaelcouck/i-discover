@@ -80,6 +80,27 @@ public final class THREAD {
     }
 
     /**
+     * This method will submit the callable and add it to a map so the caller can cancel the future if necessary.
+     *
+     * @param name     the name to assign to the future to be able to cancel it if necessary
+     * @param callable the runnable to schedule for running
+     * @return the future that is being submitted to execute
+     */
+    public static Future<?> submit(final String name, final Callable<?> callable) {
+        if (EXECUTOR_SERVICE == null || EXECUTOR_SERVICE.isShutdown()) {
+            LOGGER.info("Executor service is shutdown : " + callable);
+            return null;
+        }
+        Future<?> future = EXECUTOR_SERVICE.submit(callable);
+        if (name != null) {
+            getFutures(name).add(future);
+        } else {
+            getFutures(THREAD.class.getSimpleName()).add(future);
+        }
+        return future;
+    }
+
+    /**
      * This method will terminate the future(s) with the specified name, essentially interrupting it and remove
      * it from the list. In the case where this future is running an action the action will terminate abruptly. Note
      * that futures typically run in groups of three or four, and are keyed by the name, so all the futures in
