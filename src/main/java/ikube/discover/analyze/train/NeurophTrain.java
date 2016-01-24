@@ -32,10 +32,12 @@ public class NeurophTrain implements ITrain<Layer[]> {
         long start = System.currentTimeMillis();
 
         public void handleLearningEvent(final LearningEvent event) {
-            BackPropagation bp = (BackPropagation) event.getSource();
-            logger.debug("Current iteration: " + bp.getCurrentIteration());
-            logger.debug("Error: " + bp.getTotalNetworkError());
-            logger.debug("Calculation time: " + (double) (System.currentTimeMillis() - this.start) / 1000.0D);
+            BackPropagation backPropagation = (BackPropagation) event.getSource();
+            double calculationTime = (double) (System.currentTimeMillis() - this.start) / 1000.0D;
+            logger.info(
+                    "  Iteration: " + backPropagation.getCurrentIteration() +
+                    ", error : " + backPropagation.getTotalNetworkError() +
+                    ", time : " + calculationTime);
             this.start = System.currentTimeMillis();
         }
     }
