@@ -54,7 +54,7 @@
                     <forkMode>once</forkMode>
                     <testFailureIgnore>true</testFailureIgnore>
                     <!--suppress MavenModelInspection -->
-                    <argLine>-javaagent:${project.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters}</argLine>
+                    <!--<argLine>-javaagent:${project.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters}</argLine>-->
                 </configuration>
             </plugin>
 

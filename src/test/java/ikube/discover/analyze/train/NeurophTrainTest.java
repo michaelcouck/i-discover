@@ -3,6 +3,7 @@ package ikube.discover.analyze.train;
 import ikube.discover.AbstractTest;
 import ikube.discover.tool.THREAD;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.neuroph.core.Layer;
 import org.neuroph.core.Neuron;
@@ -40,10 +41,11 @@ public class NeurophTrainTest extends AbstractTest {
     }
 
     @Test
+    @Ignore
     public void train() throws IOException, ExecutionException, InterruptedException {
-        int chunks = 2000;
+        int chunks = 64;
         List<Future<Object>> futures = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < chunks; i++) {
             DataSet subTrainingDataSet = getSubDataSet(trainingDataSet, i, chunks);
             DataSet subCrossValidationDataSet = getSubDataSet(crossValidationDataSet, i, chunks);
             @SuppressWarnings("Convert2Lambda")
@@ -63,6 +65,20 @@ public class NeurophTrainTest extends AbstractTest {
         }
         THREAD.waitForFutures(futures, Integer.MAX_VALUE);
         // Aggregate the results dependant on the similarity of the models
+        // printWeights(futures);
+    }
+
+    private DataSet getSubDataSet(final DataSet dataSet, final int batchNumber, final int chunks) {
+        int batchSize = dataSet.size() / chunks;
+        DataSet subDataSet = new DataSet(1024, 10);
+        for (int j = batchNumber * batchSize; j < (batchNumber * batchSize) + batchSize; j++) {
+            subDataSet.addRow(dataSet.getRowAt(j));
+        }
+        return subDataSet;
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    private void printWeights(final List<Future<Object>> futures) throws ExecutionException, InterruptedException {
         for (final Future future : futures) {
             Layer[] layers = (Layer[]) future.get();
             logger.info("Layers : " + layers.length);
@@ -78,15 +94,6 @@ public class NeurophTrainTest extends AbstractTest {
                 }
             }
         }
-    }
-
-    private DataSet getSubDataSet(final DataSet dataSet, final int batchNumber, final int chunks) {
-        int batchSize = dataSet.size() / chunks;
-        DataSet subDataSet = new DataSet(1024, 10);
-        for (int j = batchNumber * batchSize; j < (batchNumber * batchSize) + batchSize; j++) {
-            subDataSet.addRow(dataSet.getRowAt(j));
-        }
-        return subDataSet;
     }
 
 }
