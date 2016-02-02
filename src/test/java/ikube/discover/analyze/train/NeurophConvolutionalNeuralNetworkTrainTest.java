@@ -26,7 +26,8 @@ import java.util.concurrent.Future;
  * @version 01.00
  * @since 01-01-2016
  */
-public class NeurophTrainTest extends AbstractTest {
+@Ignore
+public class NeurophConvolutionalNeuralNetworkTrainTest extends AbstractTest {
 
     private DataSet crossValidationDataSet;
     private DataSet trainingDataSet;
@@ -52,7 +53,7 @@ public class NeurophTrainTest extends AbstractTest {
             Future future = THREAD.submit("" + i, new Callable<Layer[]>() {
                 @Override
                 public Layer[] call() throws Exception {
-                    NeurophTrain neurophTrain = new NeurophTrain(subTrainingDataSet, subCrossValidationDataSet);
+                    NeurophConvolutionalNeuralNetworkTrain neurophTrain = new NeurophConvolutionalNeuralNetworkTrain(subTrainingDataSet, subCrossValidationDataSet);
                     try {
                         return neurophTrain.train();
                     } catch (final IOException e) {

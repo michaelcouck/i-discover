@@ -23,7 +23,7 @@ import java.util.Arrays;
  * @version 01.00
  * @since 01-01-2016
  */
-public class NeurophTrain implements ITrain<Layer[]> {
+public class NeurophConvolutionalNeuralNetworkTrain implements ITrain<Layer[]> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -45,7 +45,7 @@ public class NeurophTrain implements ITrain<Layer[]> {
     private DataSet trainingDataSet;
     private DataSet crossValidationDataSet;
 
-    NeurophTrain(final DataSet trainingDataSet, final DataSet crossValidationDataSet) {
+    NeurophConvolutionalNeuralNetworkTrain(final DataSet trainingDataSet, final DataSet crossValidationDataSet) {
         this.trainingDataSet = trainingDataSet;
         this.crossValidationDataSet = crossValidationDataSet;
     }
