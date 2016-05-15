@@ -94,6 +94,7 @@
     <modules>
         <module>code/dis</module>
         <module>code/ssh</module>
+        <module>code/syn</module>
     </modules>
 
     <dependencies>
