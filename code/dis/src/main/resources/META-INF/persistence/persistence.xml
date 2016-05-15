@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <persistence
+            xmlns="http://java.sun.com/xml/ns/persistence"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0" >
+
+	<persistence-unit name="IdiscoverPersistenceUnitH2" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>jdbc/nonXaDataSourceH2</jta-data-source>
+		<!--<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>-->
+
+        <class>discover.database.model.Persistable</class>
+        <class>discover.database.model.Analysis</class>
+
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+		
+		<properties>
+			<!--<property name="openjpa.Connection2UserName" value="sa" />-->
+            <!--<property name="openjpa.Connection2Password" value="" />-->
+            <!--<property name="openjpa.Connection2URL" value="jdbc:h2:file:i-discover" />-->
+            <!--<property name="openjpa.Connection2DriverName" value="org.h2.Driver" />-->
+
+            <!--<property name="openjpa.ConnectionUserName" value="sa" />-->
+            <!--<property name="openjpa.ConnectionPassword" value="" />-->
+            <!--<property name="openjpa.ConnectionURL" value="jdbc:h2:file:i-discover" />-->
+            <!--<property name="openjpa.ConnectionDriverName" value="org.h2.Driver" />-->
+
+            <!--<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>-->
+
+            <!--<property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)"/>-->
+            <!--<property name="openjpa.InverseManager" value="true(Action=warn)"/>-->
+            <!--<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='drop,add')" />-->
+            <!--<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" /> -->
+            <!--ForeignKeys=true,Indexes=true,SchemaAction='drop,add',SchemaAction='add,deleteTableContents' -->
+
+            <!-- Eclipse link properties -->
+            <!--<property name="javax.persistence.jdbc.user" value="sa"/>-->
+            <!--<property name="javax.persistence.jdbc.password" value=""/>-->
+            <!--<property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>-->
+            <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:file:i-discover"/>-->
+            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.logging.level.sql" value="INFO"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+            <property name="eclipselink.ddl-generation.output-mode" value="both"/>
+            <property name="eclipselink.weaving" value="false"/>
+
+            <!--<property name="eclipselink.create-ddl-jdbc-file-name" value="createDDL_ddlGeneration.jdbc"/>-->
+            <!--<property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDDL_ddlGeneration.jdbc"/>-->
+        </properties>
+	</persistence-unit>
+	
+</persistence>

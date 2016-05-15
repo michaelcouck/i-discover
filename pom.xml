@@ -4,11 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>i-discover</artifactId>
-    <groupId>ikube</groupId>
-    <name>Java deep learning API</name>
-    <description>Rest exposed distributed deep learning services.</description>
+    <groupId>i-discover</groupId>
+    <name>Java processing framework</name>
+    <description>Bla...</description>
     <version>1.0-SNAPSHOT</version>
     <url>http://i-kube.be</url>
+    <packaging>pom</packaging>
 
     <organization>
         <name>Ikube Ltd.</name>
@@ -89,6 +90,11 @@
 
         </plugins>
     </build>
+
+    <modules>
+        <module>code/dis</module>
+        <module>code/ssh</module>
+    </modules>
 
     <dependencies>
         <dependency>
