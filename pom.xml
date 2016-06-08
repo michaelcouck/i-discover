@@ -66,7 +66,6 @@
                 <configuration>
                     <forkMode>once</forkMode>
                     <argLine>${headless-parameters} ${memory-parameters}</argLine>
-                    <!--<argLine>-XX:PermSize=256m -XX:MaxPermSize=512m -Xms1024m -Xmx4096m -Djava.awt.headless=true</argLine>-->
                     <argLine>-javaagent:${project.parent.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters}</argLine>
                     <testFailureIgnore>true</testFailureIgnore>
                     <includes>

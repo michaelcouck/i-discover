@@ -5,10 +5,7 @@ import discover.database.IDataBase;
 import discover.database.model.Analysis;
 import discover.search.Searcher;
 import discover.tool.THREAD;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +26,7 @@ import java.util.Random;
  * @version 01.00
  * @since 10-07-2015
  */
+@Ignore
 @Configurable
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"file:src/main/resources/experimental/spring.xml"})
