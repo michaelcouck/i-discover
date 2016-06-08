@@ -2,7 +2,7 @@ package discover.connect;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import ikube.discover.AbstractTest;
+import discover.AbstractTest;
 import discover.Context;
 import discover.listener.IEvent;
 import discover.listener.IndexWriterEvent;

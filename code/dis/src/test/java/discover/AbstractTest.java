@@ -1,4 +1,4 @@
-package ikube.discover;
+package discover;
 
 import discover.tool.LOGGING;
 import org.apache.lucene.analysis.Analyzer;

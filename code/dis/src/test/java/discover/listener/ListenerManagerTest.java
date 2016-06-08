@@ -1,6 +1,6 @@
 package discover.listener;
 
-import ikube.discover.AbstractTest;
+import discover.AbstractTest;
 import discover.Context;
 import discover.grid.ClusterManagerGridGain;
 import discover.tool.THREAD;

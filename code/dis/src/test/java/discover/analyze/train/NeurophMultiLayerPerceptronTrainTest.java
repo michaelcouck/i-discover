@@ -1,6 +1,6 @@
 package discover.analyze.train;
 
-import ikube.discover.AbstractTest;
+import discover.AbstractTest;
 import discover.tool.THREAD;
 import org.junit.Before;
 import org.junit.Test;

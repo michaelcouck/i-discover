@@ -1,6 +1,6 @@
 package discover.grid;
 
-import ikube.discover.AbstractTest;
+import discover.AbstractTest;
 import discover.IConstants;
 import discover.listener.IConsumer;
 import discover.tool.THREAD;

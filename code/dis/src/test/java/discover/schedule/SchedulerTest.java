@@ -1,7 +1,7 @@
 package discover.schedule;
 
 import com.jcraft.jsch.JSchException;
-import ikube.discover.AbstractTest;
+import discover.AbstractTest;
 import discover.Context;
 import discover.grid.ClusterManagerGridGain;
 import discover.connect.DatabaseConnector;

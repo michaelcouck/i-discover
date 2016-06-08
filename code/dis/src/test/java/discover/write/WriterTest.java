@@ -1,7 +1,7 @@
 package discover.write;
 
 import com.jcraft.jsch.JSchException;
-import ikube.discover.AbstractTest;
+import discover.AbstractTest;
 import discover.tool.THREAD;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;

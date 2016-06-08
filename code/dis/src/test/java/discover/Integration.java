@@ -1,4 +1,4 @@
-package ikube.discover;
+package discover;
 
 import com.jcraft.jsch.JSchException;
 import discover.database.IDataBase;
@@ -39,6 +39,7 @@ public class Integration {
     boolean shuttingDown;
 
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     private Searcher searcher;
 
     @Autowired
