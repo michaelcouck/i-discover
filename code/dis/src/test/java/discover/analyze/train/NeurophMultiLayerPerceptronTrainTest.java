@@ -3,6 +3,7 @@ package discover.analyze.train;
 import discover.AbstractTest;
 import discover.tool.THREAD;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.neuroph.core.Layer;
 import org.neuroph.core.Neuron;
@@ -27,6 +28,7 @@ import java.util.concurrent.Future;
  * @version 01.00
  * @since 01-01-2016
  */
+@Ignore
 public class NeurophMultiLayerPerceptronTrainTest extends AbstractTest {
 
     private DataSet crossValidationDataSet;

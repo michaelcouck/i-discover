@@ -23,16 +23,17 @@
         <spring-security-version>3.2.5.RELEASE</spring-security-version>
         <spring-security-oauth-version>3.19</spring-security-oauth-version>
 
+        <memory-parameters>-Xms1024m -Xmx4096m</memory-parameters>
+        <headless-parameters>-Djava.awt.headless=true</headless-parameters>
+
         <!-- Serenity parameters -->
+        <dump-data>-Ddump=true</dump-data>
         <write-classes>-Dwrite.classes=false</write-classes>
         <clean-classes>-Dclean.classes=true</clean-classes>
         <included-packages>-Dincluded.packages=discover</included-packages>
         <excluded-packages>-Dexcluded.packages=Mock:Test:Integration:gridgain:org.eclipse</excluded-packages>
         <included-adapters>-Dincluded.adapters=coverage:complexity:dependency</included-adapters>
-        <serenity-parameters>${write-classes} ${clean-classes} ${included-packages} ${excluded-packages} ${included-adapters} -noverify</serenity-parameters>
-
-        <headless-parameters>-Djava.awt.headless=true</headless-parameters>
-        <memory-parameters>-Xms1024m -Xmx4096m</memory-parameters>
+        <serenity-parameters>${write-classes} ${clean-classes} ${included-packages} ${excluded-packages} ${included-adapters} ${dump-data} -noverify</serenity-parameters>
     </properties>
 
     <build>
@@ -65,7 +66,7 @@
                 <version>2.6</version>
                 <configuration>
                     <forkMode>once</forkMode>
-                    <argLine>${headless-parameters} ${memory-parameters}</argLine>
+                    <!--suppress MavenModelInspection -->
                     <argLine>-javaagent:${project.parent.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters}</argLine>
                     <testFailureIgnore>true</testFailureIgnore>
                     <includes>
@@ -75,8 +76,8 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>integration-test</goal>
                             <goal>verify</goal>
+                            <goal>integration-test</goal>
                         </goals>
                     </execution>
                 </executions>
