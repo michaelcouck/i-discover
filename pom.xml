@@ -28,6 +28,7 @@
 
         <!-- Serenity parameters -->
         <dump-data>-Ddump=true</dump-data>
+        <delete-database-file>-Ddelete=false</delete-database-file>
         <write-classes>-Dwrite.classes=false</write-classes>
         <clean-classes>-Dclean.classes=true</clean-classes>
         <included-packages>-Dincluded.packages=discover</included-packages>
@@ -67,7 +68,7 @@
                 <configuration>
                     <forkMode>once</forkMode>
                     <!--suppress MavenModelInspection -->
-                    <argLine>-javaagent:${project.parent.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters}</argLine>
+                    <argLine>-javaagent:${project.parent.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters} ${delete-database-file}</argLine>
                     <testFailureIgnore>true</testFailureIgnore>
                     <includes>
                         <include>**/*Integration*.java</include>
@@ -94,8 +95,8 @@
 
     <modules>
         <module>code/dis</module>
-        <!--<module>code/ssh</module>
-        <module>code/syn</module>-->
+        <module>code/ssh</module>
+        <module>code/syn</module>
     </modules>
 
     <dependencies>
