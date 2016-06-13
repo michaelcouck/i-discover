@@ -57,7 +57,7 @@ public class DatabaseConnectorTest extends AbstractTest {
     private StartDatabaseProcessingEvent startDatabaseProcessingEvent;
 
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "Convert2Lambda"})
     public void readChangedRecords() throws JSchException, SQLException {
         Mockito.doAnswer(new Answer() {
             @Override
