@@ -108,7 +108,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
     @SuppressWarnings("JpaQueryApiInspection")
     public void notify(final StartDatabaseProcessingEvent startDatabaseProcessingEvent) {
         Context context = startDatabaseProcessingEvent.getContext();
-        logger.debug("Starting database on : " + context.getName());
+        logger.info("Starting database on : " + context.getName());
         //noinspection EmptyFinallyBlock
         try {
             createSshTunnel();
@@ -144,7 +144,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
                     boolean nextAndDataSizeLimitOrNotNext = nextAndDataSizeLimit || !next;
                     if (nextAndDataSizeLimitOrNotNext) {
                         //noinspection ConstantConditions
-                        logger.debug("Fire event : " + nextAndDataSizeLimit + ", " + nextAndDataSizeLimitOrNotNext);
+                        logger.info("Fire event : " + nextAndDataSizeLimit + ", " + nextAndDataSizeLimitOrNotNext);
                         List<Map<Object, Object>> clonedData = new ArrayList<>(data);
                         fire(new IndexWriterEvent(context, null, clonedData));
                         data.clear();
@@ -162,7 +162,7 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
     public void fire(final IndexWriterEvent event) {
         // TODO: Failover - only fire event and carry on if successful
         // TODO: Send this data batch to the node with the lowest cpu
-        logger.debug("Firing event in grid : " + event);
+        logger.info("Firing event in grid : " + event);
         listenerManager.fire(event, false);
     }
 

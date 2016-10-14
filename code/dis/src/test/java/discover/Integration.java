@@ -4,8 +4,12 @@ import com.jcraft.jsch.JSchException;
 import discover.database.IDataBase;
 import discover.database.model.Analysis;
 import discover.search.Searcher;
+import discover.tool.LOGGING;
 import discover.tool.THREAD;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +30,19 @@ import java.util.Random;
  * @version 01.00
  * @since 10-07-2015
  */
-@Ignore
 @Configurable
 @RunWith(SpringJUnit4ClassRunner.class)
+@SuppressWarnings("SpringContextConfigurationInspection")
 @ContextConfiguration(locations = {"file:src/main/resources/experimental/spring.xml"})
 public class Integration {
 
+    static {
+        LOGGING.configure();
+    }
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    boolean shuttingDown;
+    private boolean shuttingDown;
 
     @Autowired
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -42,19 +50,19 @@ public class Integration {
 
     @Autowired
     @Qualifier("discover.database.IDataBase")
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     private IDataBase dataBase;
 
     @Before
     public void before() {
         THREAD.initialize();
-        // dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
+        dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
     }
 
     @After
     public void after() {
-        // dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
         shuttingDown = Boolean.TRUE;
-        THREAD.sleep(30000);
+        dataBase.removeBatch(dataBase.find(Analysis.class, 0, Integer.MAX_VALUE));
     }
 
     @Test
@@ -67,16 +75,13 @@ public class Integration {
     private void addSearches() {
         class Searcher implements Runnable {
             public void run() {
-                THREAD.sleep(30000);
-                int counter = 0;
+                THREAD.sleep(15000);
                 do {
                     Analysis rule = dataBase.find(Analysis.class, 0, 1).get(0);
                     String id = Double.toString(rule.getId());
                     ArrayList<HashMap<String, String>> results = searcher.doSearch("ID", id);
+                    logger.info("Results : " + results.size());
                     Assert.assertEquals("Must be two results, the hit and the statistics : ", 2, results.size());
-                    if (counter++ % 1000 == 0) {
-                        logger.info("Results : " + results);
-                    }
                     THREAD.sleep(10);
                 } while (!shuttingDown);
             }
@@ -90,7 +95,7 @@ public class Integration {
                 long count;
                 Random random = new Random();
                 do {
-                    int insertsPerSecond = random.nextInt(100);
+                    int insertsPerSecond = random.nextInt(1000);
                     long start = System.currentTimeMillis();
                     ArrayList<Analysis> rules = new ArrayList<>();
                     for (int i = 0; i < insertsPerSecond; i++) {
@@ -103,7 +108,7 @@ public class Integration {
                         rules.add(rule);
                     }
 
-                    logger.debug("Persisting batch {}", rules.size());
+                    logger.info("Persisting batch {}", rules.size());
                     dataBase.persistBatch(rules);
 
                     count = dataBase.count(Analysis.class);
@@ -111,6 +116,7 @@ public class Integration {
                     if (count % 1000 == 0) {
                         logger.error("Rule count : {}, sleeping for : {}", count, sleep);
                     }
+                    logger.info("Sleeping for {}", sleep);
                     THREAD.sleep(sleep);
                 } while (!shuttingDown);
             }

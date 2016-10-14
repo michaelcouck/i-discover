@@ -57,7 +57,7 @@
                     <forkMode>once</forkMode>
                     <testFailureIgnore>true</testFailureIgnore>
                     <!--suppress MavenModelInspection -->
-                    <argLine>-javaagent:${project.parent.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters}</argLine>
+                    <!--<argLine>-javaagent:${project.parent.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters}</argLine>-->
                 </configuration>
             </plugin>
 
@@ -68,7 +68,7 @@
                 <configuration>
                     <forkMode>once</forkMode>
                     <!--suppress MavenModelInspection -->
-                    <argLine>-javaagent:${project.parent.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters} ${delete-database-file}</argLine>
+                    <!--<argLine>-javaagent:${project.parent.basedir}/serenity/serenity.jar ${headless-parameters} ${serenity-parameters} ${memory-parameters} ${delete-database-file}</argLine>-->
                     <testFailureIgnore>true</testFailureIgnore>
                     <includes>
                         <include>**/*Integration*.java</include>

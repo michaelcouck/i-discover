@@ -20,7 +20,6 @@ import org.gridgain.grid.lang.GridPredicate;
 import org.gridgain.grid.messaging.GridMessaging;
 import org.gridgain.grid.resources.GridTaskContinuousMapperResource;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.*;
@@ -38,7 +37,6 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class ClusterManagerGridGain extends AClusterManager {
 
-    @Autowired
     private Grid grid;
 
     public void initialize() throws GridException {
@@ -341,7 +339,7 @@ public class ClusterManagerGridGain extends AClusterManager {
         }
     }
 
-    public Object pop(final String queue) {
+    Object pop(final String queue) {
         try {
             GridCache gridCache = grid.cache(queue);
             GridCacheDataStructures gridCacheDataStructures = gridCache.dataStructures();

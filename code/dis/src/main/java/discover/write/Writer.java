@@ -54,6 +54,7 @@ public class Writer implements IConsumer<IndexWriterEvent>, IProducer<IndexWrite
 
     @Override
     public void notify(final IndexWriterEvent writerEvent) {
+        logger.info("Received event : ", writerEvent);
         List<Map<Object, Object>> data = writerEvent.getData();
         if (data != null) {
             process(writerEvent.getContext(), data);

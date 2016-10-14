@@ -26,7 +26,6 @@ import java.util.concurrent.Future;
  * @version 01.00
  * @since 01-01-2016
  */
-@Ignore
 public class NeurophConvolutionalNeuralNetworkTrainTest extends AbstractTest {
 
     private DataSet crossValidationDataSet;

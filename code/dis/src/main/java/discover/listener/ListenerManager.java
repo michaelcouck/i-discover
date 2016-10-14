@@ -27,6 +27,10 @@ import java.util.Map;
 @Configuration
 public class ListenerManager {
 
+    static {
+        THREAD.initialize();
+    }
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -66,7 +70,7 @@ public class ListenerManager {
     }
 
     public void fire(final IEvent<?, ?> event, final boolean local) {
-        logger.debug("Received event : {}", ToStringBuilder.reflectionToString(event));
+        logger.info("Received event : {}", event);
         if (local) {
             notify(event);
         } else {
@@ -78,13 +82,13 @@ public class ListenerManager {
         String type = event.getClass().getSimpleName();
         String name = event.getContext().getName();
         List<IConsumer<IEvent<?, ?>>> listeners = get(type, name);
-        logger.debug("Notifying listeners : {}", listeners);
+        logger.info("Notifying listeners : {}", listeners);
         for (final IConsumer<IEvent<?, ?>> listener : listeners) {
             final String jobName = Long.toString(System.nanoTime());
             class Notifier implements Runnable {
                 public void run() {
                     try {
-                        logger.debug("Notifying listener : {}", listener);
+                        logger.info("Notifying listener : {}", listener);
                         listener.notify(event);
                     } catch (final Exception e) {
                         logger.error(null, e);

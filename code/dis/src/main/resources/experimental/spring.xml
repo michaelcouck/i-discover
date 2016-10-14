@@ -54,7 +54,6 @@
         depends-on="h2DataSourceBinder"
         property:persistenceXmlLocations-ref="persistenceXmlLocations"
         property:defaultDataSource-ref="${idiscover.dataSource}"/>
-     <!-- property:defaultDataSource-ref="${idiscover.dataSource}" -->
     <util:list id="persistenceXmlLocations">
         <value>classpath*:META-INF/persistence/persistence.xml</value>
     </util:list>
@@ -118,6 +117,7 @@
         class="discover.schedule.Scheduler"
         lazy-init="false"
         depends-on="discover.cluster.IClusterManager"
+        property:contexts-ref="contexts"
         property:clusterManager-ref="discover.cluster.IClusterManager"/>
 
     <aop:config>
