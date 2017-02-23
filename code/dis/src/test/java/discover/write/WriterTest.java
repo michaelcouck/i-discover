@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
  * @version 01.00
  * @since 10-07-2015
  */
+@Ignore
 public class WriterTest extends AbstractTest {
 
     @Spy

@@ -28,6 +28,7 @@ import static org.junit.Assert.assertEquals;
  * @version 01.00
  * @since 09-07-2015
  */
+@Ignore
 public class DatabaseConnectorTest extends AbstractTest {
 
     @Spy

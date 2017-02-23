@@ -9,6 +9,7 @@ import discover.write.RamWriter;
 import org.apache.lucene.document.Document;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -32,6 +33,7 @@ import static org.mockito.Mockito.verify;
  * @version 01.00
  * @since 10-07-2015
  */
+@Ignore
 public class SchedulerTest extends AbstractTest {
 
     @Spy

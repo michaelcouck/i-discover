@@ -125,12 +125,12 @@
             class="discover.aspect.RandomLoggerAspect"
             property:probability="10"/>
 
-    <aop:config>
+    <!--<aop:config>
         <aop:pointcut id="dataBaseJpaH2" expression="execution(* discover.database.DataBaseJpaH2.*(..))"/>
         <aop:advisor advice-ref="transactionAdvice" pointcut-ref="dataBaseJpaH2"/>
         <aop:pointcut id="logger" expression="execution(* org.slf4j.Logger.info(..))"/>
         <aop:advisor advice-ref="loggingAdvice" pointcut-ref="discover.aspect.RandomLoggerAspect"/>
-    </aop:config>
+    </aop:config>-->
 
     <util:list id="contexts">
         <ref bean="search-context"/>
