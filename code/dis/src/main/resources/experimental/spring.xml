@@ -30,12 +30,12 @@
 
     <context:property-placeholder
             location="classpath*:**/experimental/spring.properties"
-            properties-ref="discover.tool.PropertyConfigurer"/>
+            properties-ref="ikube.toolkit.PropertyConfigurer"/>
 
     <!-- This bean will look through the classpath and load every Spring properties file it finds. -->
     <bean
-            id="discover.tool.PropertyConfigurer"
-            class="discover.tool.PropertyConfigurer"
+            id="ikube.toolkit.PropertyConfigurer"
+            class="ikube.toolkit.PropertyConfigurer"
             lazy-init="false"
             init-method="initialize"
             property:fileNamePattern="spring.properties"/>
