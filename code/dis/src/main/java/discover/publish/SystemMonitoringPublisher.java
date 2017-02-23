@@ -1,7 +1,7 @@
 package discover.publish;
 
 import discover.IConstants;
-import discover.listener.SystemMonitoringEvent;
+import discover.grid.SystemMonitoringEvent;
 import org.springframework.stereotype.Component;
 
 import java.lang.management.ManagementFactory;

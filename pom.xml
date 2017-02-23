@@ -101,6 +101,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>ikube</groupId>
+            <artifactId>ikube-com</artifactId>
+            <version>6.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
             <version>1.10.0.RELEASE</version>

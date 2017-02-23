@@ -1,7 +1,7 @@
 package discover.analyze.train;
 
 import discover.AbstractTest;
-import discover.tool.THREAD;
+import ikube.toolkit.THREAD;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -49,12 +48,12 @@ public class NeurophConvolutionalNeuralNetworkTrainTest extends AbstractTest {
             DataSet subTrainingDataSet = getSubDataSet(trainingDataSet, i, chunks);
             DataSet subCrossValidationDataSet = getSubDataSet(crossValidationDataSet, i, chunks);
             @SuppressWarnings("Convert2Lambda")
-            Future future = THREAD.submit("" + i, new Callable<Layer[]>() {
+            Future future = THREAD.submit("" + i, new Runnable() {
                 @Override
-                public Layer[] call() throws Exception {
+                public void run() {
                     NeurophConvolutionalNeuralNetworkTrain neurophTrain = new NeurophConvolutionalNeuralNetworkTrain(subTrainingDataSet, subCrossValidationDataSet);
                     try {
-                        return neurophTrain.train();
+                        neurophTrain.train();
                     } catch (final IOException e) {
                         throw new RuntimeException(e);
                     }

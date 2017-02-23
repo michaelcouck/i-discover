@@ -5,7 +5,7 @@ import discover.AbstractTest;
 import discover.Context;
 import discover.grid.ClusterManagerGridGain;
 import discover.connect.DatabaseConnector;
-import discover.write.Writer;
+import discover.write.RamWriter;
 import org.apache.lucene.document.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -39,7 +39,7 @@ public class SchedulerTest extends AbstractTest {
     private Scheduler manager;
 
     @Mock
-    private Writer writer;
+    private RamWriter writer;
     @Mock
     private DatabaseConnector database;
     @Mock

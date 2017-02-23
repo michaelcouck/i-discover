@@ -1,4 +1,4 @@
-package discover.listener;
+package discover.grid;
 
 /**
  * Tagging interface for components that consume events from the grid.

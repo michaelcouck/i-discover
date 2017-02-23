@@ -1,17 +1,17 @@
-package discover.listener;
+package discover.grid;
 
 import discover.Context;
 
 /**
  * @author Michael Couck
  * @version 01.00
- * @since 17-08-2015
+ * @since 23-08-2015
  */
-public class StartDatabaseProcessingEvent implements IEvent<Void, Void> {
+public class SystemMonitoringEvent implements IEvent<Void, Void> {
 
     private Context context;
 
-    public StartDatabaseProcessingEvent(final Context context) {
+    public SystemMonitoringEvent(final Context context) {
         this.context = context;
     }
 

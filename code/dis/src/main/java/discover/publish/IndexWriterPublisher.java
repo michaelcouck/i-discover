@@ -1,6 +1,6 @@
 package discover.publish;
 
-import discover.listener.IndexWriterEvent;
+import discover.grid.RamWriterEvent;
 import org.apache.lucene.document.Document;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +15,10 @@ import java.util.Map;
  * @since 09-07-2015
  */
 @Component
-public class IndexWriterPublisher extends AbstractPublish<IndexWriterEvent> {
+public class IndexWriterPublisher extends AbstractPublish<RamWriterEvent> {
 
     @Override
-    public void notify(final IndexWriterEvent event) {
+    public void notify(final RamWriterEvent event) {
         logger.info("Event : " + event.hashCode());
         String apiKey = "3hBgqJHgsdADILee9gmw3rgmT91tI28Z";
         List<Map<Object, Object>> data = event.getData();

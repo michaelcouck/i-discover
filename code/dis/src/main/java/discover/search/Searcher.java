@@ -1,8 +1,8 @@
 package discover.search;
 
-import discover.listener.IConsumer;
-import discover.listener.OpenSearcherEvent;
-import discover.tool.THREAD;
+import discover.grid.IConsumer;
+import discover.grid.OpenSearcherEvent;
+import ikube.toolkit.THREAD;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;

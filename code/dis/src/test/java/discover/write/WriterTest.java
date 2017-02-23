@@ -2,7 +2,7 @@ package discover.write;
 
 import com.jcraft.jsch.JSchException;
 import discover.AbstractTest;
-import discover.tool.THREAD;
+import ikube.toolkit.THREAD;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.junit.Ignore;
@@ -12,10 +12,7 @@ import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,15 +24,17 @@ import static org.junit.Assert.assertEquals;
 public class WriterTest extends AbstractTest {
 
     @Spy
-    private Writer writer;
+    private RamWriter writer;
 
     @Test
     public void writeToIndex() throws IOException {
         int iterations = 100;
+        List<Document> documents = new ArrayList<>();
         for (int i = iterations; i > 0; i--) {
             Document document = new Document();
-            writer.writeToIndex(Arrays.asList(document));
+            documents.add(document);
         }
+        writer.writeToIndex(writer.indexWriter, documents);
         THREAD.sleep(1000);
         IndexWriter indexWriter = (IndexWriter) Whitebox.getInternalState(writer, "indexWriter"); // Deencapsulation.getField(writer,
         // IndexWriter.class);
@@ -55,7 +54,7 @@ public class WriterTest extends AbstractTest {
     }
 
     private Map<Object, Object> getMap(final Object[] keys, final Object[] values) {
-        Map<Object, Object> map = new HashMap<Object, Object>();
+        Map<Object, Object> map = new HashMap<>();
         for (int i = 0; i < keys.length; i++) {
             map.put(keys[i], values[i]);
         }

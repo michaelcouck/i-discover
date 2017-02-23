@@ -1,6 +1,6 @@
 package discover;
 
-import discover.tool.LOGGING;
+import ikube.toolkit.LOGGING;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;

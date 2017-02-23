@@ -1,7 +1,7 @@
 package discover.search;
 
 import discover.AbstractTest;
-import discover.tool.THREAD;
+import ikube.toolkit.THREAD;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.search.IndexSearcher;

@@ -1,10 +1,8 @@
 package discover.grid;
 
 import discover.IConstants;
-import discover.listener.IConsumer;
-import discover.listener.IEvent;
-import discover.tool.THREAD;
-import discover.tool.URI;
+import ikube.toolkit.THREAD;
+import ikube.toolkit.URI;
 import org.gridgain.grid.Grid;
 import org.gridgain.grid.GridException;
 import org.gridgain.grid.GridFuture;

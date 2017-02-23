@@ -1,8 +1,8 @@
 package discover.analyze;
 
-import discover.listener.AnalysisEvent;
-import discover.listener.IConsumer;
-import discover.listener.IProducer;
+import discover.grid.AnalysisEvent;
+import discover.grid.IConsumer;
+import discover.grid.IProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +23,6 @@ public class Analyzer implements IConsumer<AnalysisEvent>, IProducer<AnalysisEve
     }
 
     @Override
-    public void fire(final AnalysisEvent analysisEvent) {
-        Thread.interrupted();
+    public void fire(AnalysisEvent event, boolean local) {
     }
-
 }

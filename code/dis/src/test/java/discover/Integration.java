@@ -4,8 +4,8 @@ import com.jcraft.jsch.JSchException;
 import discover.database.IDataBase;
 import discover.database.model.Analysis;
 import discover.search.Searcher;
-import discover.tool.LOGGING;
-import discover.tool.THREAD;
+import ikube.toolkit.LOGGING;
+import ikube.toolkit.THREAD;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -69,7 +69,7 @@ public class Integration {
     public void process() throws SQLException, JSchException {
         addRules();
         addSearches();
-        THREAD.sleep(1000 * 600);
+        THREAD.sleep(1000 * 60 * 60);
     }
 
     private void addSearches() {
@@ -95,7 +95,7 @@ public class Integration {
                 long count;
                 Random random = new Random();
                 do {
-                    int insertsPerSecond = random.nextInt(1000);
+                    int insertsPerSecond = random.nextInt(10000);
                     long start = System.currentTimeMillis();
                     ArrayList<Analysis> rules = new ArrayList<>();
                     for (int i = 0; i < insertsPerSecond; i++) {

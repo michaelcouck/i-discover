@@ -13,9 +13,8 @@ public class SshServer {
         org.apache.sshd.server.SshServer sshd = org.apache.sshd.server.SshServer.setUpDefaultServer();
         sshd.setPort(2222);
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(new File("~/hostkey.ser")));
-        sshd.setShellFactory(new ProcessShellFactory(new String[] { "/bin/sh", "-i", "-l" }));
+        sshd.setShellFactory(new ProcessShellFactory("/bin/sh", "-i", "-l"));
         sshd.setCommandFactory(new ScpCommandFactory());
-        // sshd.setCommandFactory(new ScpCommandFactory());
         try {
             sshd.start();
             Thread.sleep(600000);

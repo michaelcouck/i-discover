@@ -1,4 +1,4 @@
-package discover.listener;
+package discover.grid;
 
 import discover.Context;
 import org.apache.lucene.document.Document;
@@ -9,19 +9,16 @@ import java.util.Map;
 /**
  * @author Michael Couck
  * @version 01.00
- * @since 17-08-2015
+ * @since 15-08-2016
  */
-public class IndexWriterEvent implements IEvent<Void, List<Map<Object, Object>>> {
+public class DiskWriterEvent implements IEvent<Boolean, List<Map<Object, Object>>> {
 
     private Context context;
-
     private List<Document> documents;
 
-    private List<Map<Object, Object>> data;
-    public IndexWriterEvent(final Context context, final List<Document> documents, List<Map<Object, Object>> data) {
+    public DiskWriterEvent(final Context context, final List<Document> documents) {
         this.context = context;
         this.documents = documents;
-        this.data = data;
     }
 
     @Override
@@ -30,7 +27,7 @@ public class IndexWriterEvent implements IEvent<Void, List<Map<Object, Object>>>
     }
 
     @Override
-    public Void getSource() {
+    public Boolean getSource() {
         return null;
     }
 
@@ -40,7 +37,7 @@ public class IndexWriterEvent implements IEvent<Void, List<Map<Object, Object>>>
 
     @Override
     public List<Map<Object, Object>> getData() {
-        return data;
+        return null;
     }
 
 }

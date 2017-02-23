@@ -4,11 +4,12 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import discover.Context;
-import discover.listener.*;
+import discover.grid.IEvent;
+import discover.grid.Producer;
+import discover.grid.RamWriterEvent;
+import discover.grid.StartDatabaseProcessingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,7 @@ import java.util.*;
  * @since 09-07-2015
  */
 @Component
-public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent>, IProducer<IndexWriterEvent> {
+public class DatabaseConnector extends Producer {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -86,12 +87,8 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
     // And this we get from the driver
     private Connection connection;
 
-    @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Qualifier("discover.listener.ListenerManager")
-    private ListenerManager listenerManager;
-
     public DatabaseConnector() {
+        super(StartDatabaseProcessingEvent.class);
         jsch = new JSch();
         config = new Properties();
         config.put("StrictHostKeyChecking", "no");
@@ -106,7 +103,8 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
      */
     @Override
     @SuppressWarnings("JpaQueryApiInspection")
-    public void notify(final StartDatabaseProcessingEvent startDatabaseProcessingEvent) {
+    public void notify(final IEvent event) {
+        StartDatabaseProcessingEvent startDatabaseProcessingEvent = (StartDatabaseProcessingEvent) event;
         Context context = startDatabaseProcessingEvent.getContext();
         logger.info("Starting database on : " + context.getName());
         //noinspection EmptyFinallyBlock
@@ -146,7 +144,9 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
                         //noinspection ConstantConditions
                         logger.info("Fire event : " + nextAndDataSizeLimit + ", " + nextAndDataSizeLimitOrNotNext);
                         List<Map<Object, Object>> clonedData = new ArrayList<>(data);
-                        fire(new IndexWriterEvent(context, null, clonedData));
+                        // TODO: Failover - only fire event and carry on if successful
+                        // TODO: Send this data batch to the node with the lowest cpu
+                        fire(new RamWriterEvent(context, false, null, clonedData), false);
                         data.clear();
                     }
                 } while (next);
@@ -156,14 +156,6 @@ public class DatabaseConnector implements IConsumer<StartDatabaseProcessingEvent
         } finally {
             // TODO: Set the last modification timestamp back to the original if failed
         }
-    }
-
-    @Override
-    public void fire(final IndexWriterEvent event) {
-        // TODO: Failover - only fire event and carry on if successful
-        // TODO: Send this data batch to the node with the lowest cpu
-        logger.info("Firing event in grid : " + event);
-        listenerManager.fire(event, false);
     }
 
     void createDatabaseConnection() throws SQLException {

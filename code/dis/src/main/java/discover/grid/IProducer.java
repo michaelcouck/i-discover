@@ -1,4 +1,4 @@
-package discover.listener;
+package discover.grid;
 
 /**
  * Tagging interface for components that produce events and publish them to the grid.
@@ -14,6 +14,6 @@ public interface IProducer<E extends IEvent<?, ?>> {
      *
      * @param event the event to publish to the grid
      */
-    void fire(final E event);
+    void fire(final E event, final boolean local);
 
 }

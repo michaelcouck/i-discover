@@ -4,10 +4,8 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import discover.AbstractTest;
 import discover.Context;
-import discover.listener.IEvent;
-import discover.listener.IndexWriterEvent;
-import discover.listener.ListenerManager;
-import discover.listener.StartDatabaseProcessingEvent;
+import discover.grid.RamWriterEvent;
+import discover.grid.StartDatabaseProcessingEvent;
 import mockit.Deencapsulation;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,7 +22,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 
 /**
  * @author Michael Couck
@@ -47,9 +44,6 @@ public class DatabaseConnectorTest extends AbstractTest {
     private PreparedStatement preparedStatement;
     @Mock
     private ResultSetMetaData resultSetMetaData;
-
-    @Mock
-    private ListenerManager listenerManager;
 
     @Mock
     private Context context;
@@ -82,13 +76,6 @@ public class DatabaseConnectorTest extends AbstractTest {
         }).when(session).disconnect();
 
         final AtomicReference atomicReference = new AtomicReference(null);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(final InvocationOnMock invocation) throws Throwable {
-                atomicReference.set(invocation.getArguments()[0]);
-                return null;
-            }
-        }).when(listenerManager).fire(any(IEvent.class), any(Boolean.class));
 
         Mockito.when(connection.prepareStatement(Mockito.anyString())).thenReturn(preparedStatement);
         Mockito.when(preparedStatement.executeQuery()).thenReturn(resultSet);
@@ -107,8 +94,7 @@ public class DatabaseConnectorTest extends AbstractTest {
         Mockito.when(context.getModification()).thenReturn(new Timestamp(System.currentTimeMillis()));
 
         databaseConnector.notify(startDatabaseProcessingEvent);
-        Mockito.verify(listenerManager, Mockito.times(1)).fire(any(IEvent.class), any(Boolean.class));
-        IndexWriterEvent indexWriterEvent = (IndexWriterEvent) atomicReference.get();
+        RamWriterEvent indexWriterEvent = (RamWriterEvent) atomicReference.get();
         List<Map<Object, Object>> changedRecords = indexWriterEvent.getData();
         assertEquals("1:1", "one", changedRecords.get(0).get("one"));
         assertEquals("3:3", "five", changedRecords.get(2).get("three"));

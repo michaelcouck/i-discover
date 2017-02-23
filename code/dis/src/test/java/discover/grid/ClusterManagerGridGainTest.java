@@ -2,9 +2,8 @@ package discover.grid;
 
 import discover.AbstractTest;
 import discover.IConstants;
-import discover.listener.IConsumer;
-import discover.tool.THREAD;
-import discover.tool.URI;
+import ikube.toolkit.THREAD;
+import ikube.toolkit.URI;
 import mockit.MockUp;
 import org.gridgain.grid.*;
 import org.gridgain.grid.cache.GridCache;

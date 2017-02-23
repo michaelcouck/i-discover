@@ -1,12 +1,10 @@
 package discover.schedule;
 
 import discover.Context;
-import discover.IConstants;
-import discover.grid.ClusterManagerGridGain;
-import discover.listener.IEvent;
-import discover.listener.IProducer;
-import discover.listener.StartDatabaseProcessingEvent;
-import discover.listener.SystemMonitoringEvent;
+import discover.grid.IEvent;
+import discover.grid.Producer;
+import discover.grid.StartDatabaseProcessingEvent;
+import discover.grid.SystemMonitoringEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -22,16 +20,13 @@ import java.util.List;
  * @since 09-07-2015
  */
 @EnableScheduling
-public class Scheduler implements IProducer<IEvent<?, ?>> {
+public class Scheduler extends Producer {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private List<Context> contexts;
-    private ClusterManagerGridGain clusterManager;
 
-    @Override
-    public void fire(final IEvent<?, ?> event) {
-        logger.info("Scheduler : " + this + ", " + clusterManager);
-        clusterManager.send(IConstants.GRID_NAME, event);
+    public Scheduler() {
+        super(IEvent.class);
     }
 
     @Scheduled(initialDelay = 3000, fixedRate = 10000)
@@ -39,8 +34,7 @@ public class Scheduler implements IProducer<IEvent<?, ?>> {
         // Start the database(s) processing
         for (final Context context : contexts) {
             logger.info("Starting processing of : {}", context.getName());
-            IEvent<?, ?> event = new SystemMonitoringEvent(context);
-            fire(event);
+            fire(new SystemMonitoringEvent(context), false);
         }
     }
 
@@ -49,8 +43,7 @@ public class Scheduler implements IProducer<IEvent<?, ?>> {
         // Start the database(s) processing
         for (final Context context : contexts) {
             logger.info("Starting processing of : {}", context.getName());
-            IEvent<?, ?> event = new StartDatabaseProcessingEvent(context);
-            fire(event);
+            fire(new StartDatabaseProcessingEvent(context), false);
         }
     }
 
@@ -58,8 +51,9 @@ public class Scheduler implements IProducer<IEvent<?, ?>> {
         this.contexts = contexts;
     }
 
-    public void setClusterManager(final ClusterManagerGridGain clusterManager) {
-        this.clusterManager = clusterManager;
+    @Override
+    public void notify(IEvent event) {
+        // Do nothing at the moment
     }
 
 }
