@@ -3,7 +3,6 @@ package discover.write;
 import discover.grid.DiskWriterEvent;
 import discover.grid.IEvent;
 import ikube.toolkit.INDEX;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -14,7 +13,6 @@ import java.io.IOException;
  * @version 01.00
  * @since 09-07-2015
  */
-@Component
 public class DiskWriter extends Writer<DiskWriterEvent> {
 
     public DiskWriter() throws IOException {
@@ -27,4 +25,5 @@ public class DiskWriter extends Writer<DiskWriterEvent> {
         DiskWriterEvent diskWriterEvent = (DiskWriterEvent) event;
         writeToIndex(indexWriter, diskWriterEvent.getDocuments());
     }
+
 }

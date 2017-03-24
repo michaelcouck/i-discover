@@ -4,9 +4,6 @@ import discover.AbstractTest;
 import ikube.toolkit.THREAD;
 import org.junit.Before;
 import org.junit.Test;
-import org.neuroph.core.Layer;
-import org.neuroph.core.Neuron;
-import org.neuroph.core.Weight;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.samples.convolution.mnist.MNISTDataSet;
 
@@ -14,7 +11,6 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -75,25 +71,6 @@ public class NeurophMultiLayerPerceptronTrainTest extends AbstractTest {
             subDataSet.addRow(dataSet.getRowAt(j));
         }
         return subDataSet;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    private void printWeights(final List<Future<Object>> futures) throws ExecutionException, InterruptedException {
-        for (final Future future : futures) {
-            Layer[] layers = (Layer[]) future.get();
-            logger.info("Layers : " + layers.length);
-            for (final Layer layer : layers) {
-                Neuron[] neurons = layer.getNeurons();
-                logger.info("Neurons : " + neurons.length);
-                for (final Neuron neuron : neurons) {
-                    Weight[] weights = neuron.getWeights();
-                    logger.info("Weights : " + Arrays.toString(weights));
-                    for (final Weight weight : weights) {
-                        weight.getValue();
-                    }
-                }
-            }
-        }
     }
 
 }

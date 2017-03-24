@@ -2,7 +2,6 @@ package discover.publish;
 
 import discover.grid.RamWriterEvent;
 import org.apache.lucene.document.Document;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.Map;
  * @version 01.00
  * @since 09-07-2015
  */
-@Component
 public class IndexWriterPublisher extends AbstractPublish<RamWriterEvent> {
 
     @Override

@@ -6,7 +6,7 @@
 
 	<persistence-unit name="IdiscoverPersistenceUnitH2" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>jdbc/nonXaDataSourceH2</jta-data-source>
+        <!--<jta-data-source>jdbc/nonXaDataSourceH2</jta-data-source>-->
 		<!--<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>-->
 
         <class>discover.database.model.Persistable</class>

@@ -19,6 +19,7 @@ import java.util.List;
  * @version 01.00
  * @since 09-07-2015
  */
+@SuppressWarnings("unchecked")
 @EnableScheduling
 public class Scheduler extends Producer {
 

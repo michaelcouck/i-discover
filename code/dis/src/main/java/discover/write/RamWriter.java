@@ -10,7 +10,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,7 +25,6 @@ import java.util.Map;
  * @version 01.00
  * @since 09-07-2015
  */
-@Component
 public class RamWriter extends Writer<RamWriterEvent> {
 
     @Value("${max-memory-size-for-ram-index:512}")

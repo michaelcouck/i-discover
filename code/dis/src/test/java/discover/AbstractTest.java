@@ -14,11 +14,17 @@ import org.apache.lucene.util.Version;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.neuroph.core.Layer;
+import org.neuroph.core.Neuron;
+import org.neuroph.core.Weight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * @author Michael Couck
@@ -33,7 +39,7 @@ public class AbstractTest {
         LOGGING.configure();
     }
 
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected Directory[] getDirectories(final int numberOfDirectories) throws IOException {
         Directory[] directories = new Directory[numberOfDirectories];
@@ -73,7 +79,7 @@ public class AbstractTest {
      * This method will just print the data in the index reader.L
      *
      * @param indexReader the reader to print the documents for
-     * @throws Exception
+     * @throws Exception bla...
      */
     @SuppressWarnings("UnusedDeclaration")
     protected void printIndex(final IndexReader indexReader, final int numDocs) throws Exception {
@@ -85,10 +91,29 @@ public class AbstractTest {
         }
     }
 
-    protected void printDocument(final Document document) {
+    private void printDocument(final Document document) {
         List<IndexableField> fields = document.getFields();
         for (IndexableField indexableField : fields) {
             logger.error("        : {}", indexableField);
+        }
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    private void printWeights(final List<Future<Object>> futures) throws ExecutionException, InterruptedException {
+        for (final Future future : futures) {
+            Layer[] layers = (Layer[]) future.get();
+            logger.info("Layers : " + layers.length);
+            for (final Layer layer : layers) {
+                Neuron[] neurons = layer.getNeurons();
+                logger.info("Neurons : " + neurons.length);
+                for (final Neuron neuron : neurons) {
+                    Weight[] weights = neuron.getWeights();
+                    logger.info("Weights : " + Arrays.toString(weights));
+                    for (final Weight weight : weights) {
+                        weight.getValue();
+                    }
+                }
+            }
         }
     }
 

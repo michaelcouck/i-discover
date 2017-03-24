@@ -2,7 +2,6 @@ package discover.publish;
 
 import discover.IConstants;
 import discover.grid.SystemMonitoringEvent;
-import org.springframework.stereotype.Component;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
@@ -15,7 +14,6 @@ import java.util.Random;
  * @version 01.00
  * @since 09-07-2015
  */
-@Component
 public class SystemMonitoringPublisher extends AbstractPublish<SystemMonitoringEvent> {
 
     @Override

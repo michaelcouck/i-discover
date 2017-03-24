@@ -12,16 +12,22 @@ import org.springframework.beans.factory.annotation.Qualifier;
  */
 public abstract class Consumer<E extends IEvent<?, ?>> implements IConsumer<IEvent<?, ?>> {
 
+    private Class klassToRegisterForEvents;
     @Autowired
     @Qualifier("discover.cluster.IClusterManager")
-    @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaAutowiredMembersInspection"})
+    @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaAutowiredMembersInspection", "SpringAutowiredFieldsWarningInspection"})
     ClusterManagerGridGain clusterManager;
 
-    String klassToRegisterForEvents;
-
     Consumer(final Class<?> klassToRegisterForEvents) {
-        this.klassToRegisterForEvents = klassToRegisterForEvents.getSimpleName();
-        clusterManager.addTopicListener(this.klassToRegisterForEvents, this);
+        this.klassToRegisterForEvents = klassToRegisterForEvents;
+    }
+
+    public void setClusterManager(ClusterManagerGridGain clusterManager) {
+        this.clusterManager = clusterManager;
+    }
+
+    public void initialise() {
+        clusterManager.addTopicListener(klassToRegisterForEvents.getSimpleName(), this);
     }
 
 }

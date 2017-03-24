@@ -11,7 +11,6 @@ import discover.grid.StartDatabaseProcessingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.*;
@@ -31,7 +30,6 @@ import java.util.*;
  * @version 01.00
  * @since 09-07-2015
  */
-@Component
 public class DatabaseConnector extends Producer {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());

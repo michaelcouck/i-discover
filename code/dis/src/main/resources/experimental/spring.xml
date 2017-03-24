@@ -2,15 +2,15 @@
 
 <!--suppress ALL -->
 <beans
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.springframework.org/schema/beans"
-        xmlns:context="http://www.springframework.org/schema/context"
-        xmlns:property="http://www.springframework.org/schema/p"
-        xmlns:util="http://www.springframework.org/schema/util"
-        xmlns:transaction="http://www.springframework.org/schema/tx"
-        xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:property="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:transaction="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
 
-        xsi:schemaLocation="
+    xsi:schemaLocation="
 			http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
             http://www.springframework.org/schema/context
@@ -29,16 +29,16 @@
     </description>
 
     <context:property-placeholder
-            location="classpath*:**/experimental/spring.properties"
-            properties-ref="ikube.toolkit.PropertyConfigurer"/>
+        location="classpath*:**/experimental/spring.properties"
+        properties-ref="ikube.toolkit.PropertyConfigurer"/>
 
     <!-- This bean will look through the classpath and load every Spring properties file it finds. -->
     <bean
-            id="ikube.toolkit.PropertyConfigurer"
-            class="ikube.toolkit.PropertyConfigurer"
-            lazy-init="false"
-            init-method="initialize"
-            property:fileNamePattern="spring.properties"/>
+        id="ikube.toolkit.PropertyConfigurer"
+        class="ikube.toolkit.PropertyConfigurer"
+        lazy-init="false"
+        init-method="initialize"
+        property:fileNamePattern="spring.properties"/>
 
     <context:annotation-config/>
     <context:spring-configured/>
@@ -48,32 +48,32 @@
     <import resource="spring-h2-jdbc.xml"/>
     <import resource="spring-grid-gain.xml"/>
 
+    <!-- depends-on="h2DataSourceBinder" -->
     <bean
-            name="defaultPersistenceUnitManager"
-            class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager"
-            depends-on="h2DataSourceBinder"
-            property:persistenceXmlLocations-ref="persistenceXmlLocations"
-            property:defaultDataSource-ref="${idiscover.dataSource}"/>
+        name="defaultPersistenceUnitManager"
+        class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager"
+        property:persistenceXmlLocations-ref="persistenceXmlLocations"
+        property:defaultDataSource-ref="${idiscover.dataSource}"/>
     <util:list id="persistenceXmlLocations">
         <value>classpath*:META-INF/persistence/persistence.xml</value>
     </util:list>
 
     <!-- This bean does the injection of the entity manager into the dao. -->
     <bean
-            class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+        class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
     <bean
-            name="transactionManager"
-            class="org.springframework.orm.jpa.JpaTransactionManager"
-            property:entityManagerFactory-ref="entityManagerFactory"/>
+        name="transactionManager"
+        class="org.springframework.orm.jpa.JpaTransactionManager"
+        property:entityManagerFactory-ref="entityManagerFactory"/>
     <bean
-            name="entityManagerFactory"
-            class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-            lazy-init="false"
-            property:jpaVendorAdapter-ref="jpaAdapter"
-            property:jpaPropertyMap-ref="jpaPropertyMap"
-            property:persistenceUnitName="${idiscover.persistenceUnit}"
-            property:persistenceUnitManager-ref="defaultPersistenceUnitManager"
-            property:dataSource-ref="${idiscover.dataSource}"/>
+        name="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+        lazy-init="false"
+        property:jpaVendorAdapter-ref="jpaAdapter"
+        property:jpaPropertyMap-ref="jpaPropertyMap"
+        property:persistenceUnitName="${idiscover.persistenceUnit}"
+        property:persistenceUnitManager-ref="defaultPersistenceUnitManager"
+        property:dataSource-ref="${idiscover.dataSource}"/>
     <!--
         property:loadTimeWeaver-ref="loadTimeWeaver"
         property:dataSource-ref="${idiscover.dataSource}"
@@ -83,10 +83,10 @@
     <!--name="loadTimeWeaver"-->
     <!--class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>-->
     <bean
-            name="jpaAdapter"
-            class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter"
-            property:database="${idiscover.dataSourceType}"
-            property:showSql="true"/>
+        name="jpaAdapter"
+        class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter"
+        property:database="${idiscover.dataSourceType}"
+        property:showSql="true"/>
     <transaction:advice id="transactionAdvice" transaction-manager="transactionManager">
         <transaction:attributes>
             <transaction:method name="find*"/>
@@ -101,29 +101,29 @@
     </util:map>
 
     <bean
-            name="discover.database.IDataBase"
-            class="discover.database.DataBaseJpaH2"
-            lazy-init="true"
-            depends-on="nonXaDataSourceH2"/>
+        name="discover.database.IDataBase"
+        class="discover.database.DataBaseJpaH2"
+        lazy-init="true"
+        depends-on="nonXaDataSourceH2"/>
 
     <bean
-            id="search-context"
-            class="discover.Context"
-            depends-on="discover.database.IDataBase"
-            property:name="search-context"/>
+        id="search-context"
+        class="discover.Context"
+        depends-on="discover.database.IDataBase"
+        property:name="search-context"/>
 
     <bean
-            id="discover.schedule.Scheduler"
-            class="discover.schedule.Scheduler"
-            lazy-init="false"
-            depends-on="discover.cluster.IClusterManager"
-            property:contexts-ref="contexts"
-            property:clusterManager-ref="discover.cluster.IClusterManager"/>
+        id="discover.schedule.Scheduler"
+        class="discover.schedule.Scheduler"
+        lazy-init="false"
+        depends-on="discover.cluster.IClusterManager"
+        property:contexts-ref="contexts"
+        property:clusterManager-ref="discover.cluster.IClusterManager"/>
 
     <bean
-            id="discover.aspect.RandomLoggerAspect"
-            class="discover.aspect.RandomLoggerAspect"
-            property:probability="10"/>
+        id="discover.aspect.RandomLoggerAspect"
+        class="discover.aspect.RandomLoggerAspect"
+        property:probability="10"/>
 
     <!--<aop:config>
         <aop:pointcut id="dataBaseJpaH2" expression="execution(* discover.database.DataBaseJpaH2.*(..))"/>

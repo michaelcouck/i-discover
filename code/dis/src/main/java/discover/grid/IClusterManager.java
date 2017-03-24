@@ -1,7 +1,5 @@
 package discover.grid;
 
-import org.springframework.stereotype.Service;
-
 import java.io.Serializable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -17,7 +15,6 @@ import java.util.concurrent.Future;
  * @version 01.00
  * @since 21-11-2010
  */
-@Service
 public interface IClusterManager {
 
     /**

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.springframework.org/schema/beans"
-        xmlns:context="http://www.springframework.org/schema/context"
-        xmlns:property="http://www.springframework.org/schema/p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:property="http://www.springframework.org/schema/p"
 
-        xsi:schemaLocation="http://www.springframework.org/schema/beans
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
@@ -19,60 +19,74 @@
 
     <!-- Configuration for the grid -->
     <bean
-            id="org.gridgain.grid.GridConfiguration"
-            class="org.gridgain.grid.GridConfiguration"
-            lazy-init="false"
-            property:discoverySpi-ref="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
-            property:restEnabled="false"
-            property:restTcpPort="8090"/>
+        id="org.gridgain.grid.GridConfiguration"
+        class="org.gridgain.grid.GridConfiguration"
+        lazy-init="false"
+        property:discoverySpi-ref="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
+        property:restEnabled="false"
+        property:restTcpPort="8090"/>
     <bean
-            id="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
-            class="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
-            property:ipFinder-ref="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder"
-            property:localAddress="127.0.0.1"/>
+        id="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
+        class="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi"
+        property:ipFinder-ref="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder"
+        property:localAddress="127.0.0.1"/>
     <bean
-            id="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder"
-            class="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder">
+        id="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder"
+        class="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder">
         <property name="multicastGroup" value="224.0.0.1"/>
     </bean>
 
     <!-- The grid -->
     <bean
-            id="org.gridgain.grid.Grid"
-            class="org.gridgain.grid.GridSpringBean"
-            lazy-init="false"
-            depends-on="org.gridgain.grid.GridConfiguration"
-            property:configuration-ref="org.gridgain.grid.GridConfiguration"/>
+        id="org.gridgain.grid.Grid"
+        class="org.gridgain.grid.GridSpringBean"
+        lazy-init="false"
+        depends-on="org.gridgain.grid.GridConfiguration"
+        property:configuration-ref="org.gridgain.grid.GridConfiguration"/>
 
     <!-- Cluster manager -->
     <bean
-            id="discover.cluster.IClusterManager"
-            class="discover.grid.ClusterManagerGridGain"
-            lazy-init="false"
-            init-method="initialize"
-            destroy-method="destroy"
-            depends-on="org.gridgain.grid.Grid"
-            property:grid-ref="org.gridgain.grid.Grid"/>
+        id="discover.cluster.IClusterManager"
+        class="discover.grid.ClusterManagerGridGain"
+        lazy-init="false"
+        init-method="initialize"
+        destroy-method="destroy"
+        depends-on="org.gridgain.grid.Grid"
+        property:grid-ref="org.gridgain.grid.Grid"/>
 
     <!-- These are the actors/listeners/observers that will act on the events published to the grid -->
     <bean
-            id="discover.search.Searcher"
-            class="discover.search.Searcher"/>
+        id="discover.search.Searcher"
+        class="discover.search.Searcher"/>
+
     <bean
-            id="discover.connect.DatabaseConnector"
-            class="discover.connect.DatabaseConnector"/>
+        id="discover.connect.DatabaseConnector"
+        class="discover.connect.DatabaseConnector"
+        init-method="initialise"
+        depends-on="discover.cluster.IClusterManager"
+        property:clusterManager-ref="discover.cluster.IClusterManager"/>
+
     <bean
-            id="discover.write.RamWriter"
-            class="discover.write.RamWriter"
-            property:maxMemorySize="512"/>
+        id="discover.write.RamWriter"
+        class="discover.write.RamWriter"
+        init-method="initialise"
+        depends-on="discover.cluster.IClusterManager"
+        property:maxMemorySize="512"
+        property:clusterManager-ref="discover.cluster.IClusterManager"/>
+
     <bean
-            id="discover.write.DiskWriter"
-            class="discover.write.DiskWriter"/>
+        id="discover.write.DiskWriter"
+        class="discover.write.DiskWriter"
+        init-method="initialise"
+        depends-on="discover.cluster.IClusterManager"
+        property:clusterManager-ref="discover.cluster.IClusterManager"/>
+
     <bean
-            id="discover.publish.IndexWriterPublisher"
-            class="discover.publish.IndexWriterPublisher"/>
+        id="discover.publish.IndexWriterPublisher"
+        class="discover.publish.IndexWriterPublisher"/>
+
     <bean
-            id="discover.publish.SystemMonitoringPublisher"
-            class="discover.publish.SystemMonitoringPublisher"/>
+        id="discover.publish.SystemMonitoringPublisher"
+        class="discover.publish.SystemMonitoringPublisher"/>
 
 </beans>

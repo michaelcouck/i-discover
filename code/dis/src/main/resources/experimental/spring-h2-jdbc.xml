@@ -40,7 +40,7 @@
         <property name="password" value="${h2.jdbc.password}"/>
     </bean>
 
-    <bean
+    <!--<bean
         id="h2DataSourceBinder"
         class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
         depends-on="nonXaDataSourceH2"
@@ -51,6 +51,6 @@
                 <ref local="nonXaDataSourceH2" />
             </array>
         </property>
-    </bean>
+    </bean>-->
 
 </beans>
