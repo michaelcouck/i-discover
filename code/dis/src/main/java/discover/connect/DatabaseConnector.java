@@ -76,12 +76,12 @@ public class DatabaseConnector extends Producer {
     String password = "";
 
     // Must be the target port for the database
-    @Value("${database-port:8082}")
-    private int databasePort = 8082;
+    @Value("${database-port:9082}")
+    private int databasePort = 9082;
 
     // The url for the database
-    @Value("${database-url:jdbc:h2:tcp://localhost:8082/i-discover;DB_CLOSE_ON_EXIT=FALSE}")
-    private String url = "jdbc:h2:tcp://localhost:8082/i-discover;DB_CLOSE_ON_EXIT=FALSE";
+    @Value("${database-url:jdbc:h2:tcp://localhost:9082/i-discover;DB_CLOSE_ON_EXIT=FALSE}")
+    private String url = "jdbc:h2:tcp://localhost:9082/i-discover;DB_CLOSE_ON_EXIT=FALSE";
     // And this we get from the driver
     private Connection connection;
 

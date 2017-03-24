@@ -27,7 +27,7 @@
                 <value>-tcp</value>
                 <value>-tcpAllowOthers</value>
                 <value>-tcpPort</value>
-                <value>8082</value>
+                <value>9082</value>
             </array>
         </constructor-arg>
     </bean>
