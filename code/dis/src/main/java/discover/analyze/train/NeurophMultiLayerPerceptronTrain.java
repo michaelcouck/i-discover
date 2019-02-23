@@ -1,6 +1,6 @@
 package discover.analyze.train;
 
-import org.neuroph.core.Layer;
+/*import org.neuroph.core.Layer;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.events.LearningEvent;
 import org.neuroph.core.events.LearningEventListener;
@@ -8,7 +8,7 @@ import org.neuroph.core.learning.error.MeanSquaredError;
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.nnet.learning.BackPropagation;
 import org.neuroph.nnet.learning.MomentumBackpropagation;
-import org.neuroph.util.TransferFunctionType;
+import org.neuroph.util.TransferFunctionType;*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,11 +21,11 @@ import java.io.IOException;
  * @version 01.00
  * @since 31-01-2016
  */
-public class NeurophMultiLayerPerceptronTrain implements ITrain<Layer[]> {
+public class NeurophMultiLayerPerceptronTrain /*implements ITrain<Layer[]>*/ {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    class LearningListener implements LearningEventListener {
+    /*class LearningListener implements LearningEventListener {
 
         long start = System.currentTimeMillis();
 
@@ -74,6 +74,6 @@ public class NeurophMultiLayerPerceptronTrain implements ITrain<Layer[]> {
         // crossValidation.run();
 
         return multiLayerPerceptron.getLayers();
-    }
+    }*/
 
 }

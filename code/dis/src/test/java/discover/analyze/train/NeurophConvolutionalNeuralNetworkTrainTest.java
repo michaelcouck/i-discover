@@ -5,8 +5,8 @@ import ikube.toolkit.THREAD;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.neuroph.core.data.DataSet;
-import org.neuroph.samples.convolution.mnist.MNISTDataSet;
+/*import org.neuroph.core.data.DataSet;
+import org.neuroph.samples.convolution.mnist.MNISTDataSet;*/
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.concurrent.Future;
  */
 public class NeurophConvolutionalNeuralNetworkTrainTest extends AbstractTest {
 
-    private DataSet crossValidationDataSet;
+    /*private DataSet crossValidationDataSet;
     private DataSet trainingDataSet;
 
     @Before
@@ -70,6 +70,6 @@ public class NeurophConvolutionalNeuralNetworkTrainTest extends AbstractTest {
             subDataSet.addRow(dataSet.getRowAt(j));
         }
         return subDataSet;
-    }
+    }*/
 
 }

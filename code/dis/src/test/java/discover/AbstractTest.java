@@ -14,9 +14,9 @@ import org.apache.lucene.util.Version;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.neuroph.core.Layer;
+/*import org.neuroph.core.Layer;
 import org.neuroph.core.Neuron;
-import org.neuroph.core.Weight;
+import org.neuroph.core.Weight;*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +100,7 @@ public class AbstractTest {
 
     @SuppressWarnings("UnusedDeclaration")
     private void printWeights(final List<Future<Object>> futures) throws ExecutionException, InterruptedException {
-        for (final Future future : futures) {
+        /*for (final Future future : futures) {
             Layer[] layers = (Layer[]) future.get();
             logger.info("Layers : " + layers.length);
             for (final Layer layer : layers) {
@@ -114,7 +114,7 @@ public class AbstractTest {
                     }
                 }
             }
-        }
+        }*/
     }
 
 }

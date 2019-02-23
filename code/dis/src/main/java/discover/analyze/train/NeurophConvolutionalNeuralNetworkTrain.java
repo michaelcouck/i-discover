@@ -1,6 +1,6 @@
 package discover.analyze.train;
 
-import org.neuroph.core.Layer;
+/*import org.neuroph.core.Layer;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.events.LearningEvent;
 import org.neuroph.core.events.LearningEventListener;
@@ -9,7 +9,7 @@ import org.neuroph.nnet.ConvolutionalNetwork;
 import org.neuroph.nnet.comp.Kernel;
 import org.neuroph.nnet.comp.layer.Layer2D;
 import org.neuroph.nnet.learning.BackPropagation;
-import org.neuroph.nnet.learning.MomentumBackpropagation;
+import org.neuroph.nnet.learning.MomentumBackpropagation;*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,11 +23,11 @@ import java.util.Arrays;
  * @version 01.00
  * @since 01-01-2016
  */
-public class NeurophConvolutionalNeuralNetworkTrain implements ITrain<Layer[]> {
+public class NeurophConvolutionalNeuralNetworkTrain /*implements ITrain<Layer[]>*/ {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    class LearningListener implements LearningEventListener {
+    /*class LearningListener implements LearningEventListener {
 
         long start = System.currentTimeMillis();
 
@@ -90,6 +90,6 @@ public class NeurophConvolutionalNeuralNetworkTrain implements ITrain<Layer[]> {
         logger.info("Output : " + Arrays.toString(output));
 
         return convolutionNetwork.getLayers();
-    }
+    }*/
 
 }
