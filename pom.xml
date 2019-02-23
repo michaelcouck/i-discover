@@ -576,7 +576,7 @@
             <version>1.7</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.neuroph</groupId>
             <artifactId>neuroph-core</artifactId>
             <version>2.92</version>
@@ -605,7 +605,7 @@
             <groupId>org.neuroph</groupId>
             <artifactId>neuroph-ocr</artifactId>
             <version>2.92</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.aspose</groupId>
             <artifactId>aspose-html</artifactId>
@@ -637,7 +637,7 @@
             <id>H2O</id>
             <url>http://h2o-release.s3.amazonaws.com/h2o/rel-tibshirani/3/maven/repo/</url>
         </repository>
-        <repository>
+        <!--<repository>
             <id>ikube</id>
             <url>http://ikube.be/artifactory/libs-release-local/</url>
             <releases>
@@ -646,7 +646,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
+        </repository>-->
         <repository>
             <id>AsposeJavaAPI</id>
             <name>Aspose Java API</name>
